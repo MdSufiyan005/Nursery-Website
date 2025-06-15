@@ -1,6 +1,3 @@
-Certainly! Below is the **actual code** you can copy-paste into a `README.md` file:
-
-
 # 🌱 Nursery Website - Backend (IN DEVELOPMENT)
 
 This repository contains the backend of the **Nursery Website**, developed using Django. The project is currently in active development. It handles all server-side logic including routing, database management, and administrative operations.
