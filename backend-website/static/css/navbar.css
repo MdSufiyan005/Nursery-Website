@@ -1,0 +1,152 @@
+.navbar {
+    background-color: #f3fdf5;
+    padding: 12px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.nav-brand {
+    text-decoration: none;
+    color: #2e7d32;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-items {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    gap: 24px;
+}
+
+.cart-icon {
+    position: relative;
+    text-decoration: none;
+    color: #33691e;
+    font-size: 20px;
+}
+
+#cart-count {
+    position: absolute;
+    top: -6px;
+    right: -12px;
+    background-color: #e53935;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.user-menu {
+    background: none;
+    border: none;
+    color: #33691e;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.user-menu:hover {
+    background-color: rgba(46, 125, 50, 0.1);
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 8px 0;
+    min-width: 150px;
+    z-index: 1000;
+    display: none;
+    margin-top: 8px;
+}
+
+.dropdown-menu.show {
+    display: block;
+    animation: dropdownFade 0.2s ease-out;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #d32f2f;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(211, 47, 47, 0.1);
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .navbar ul {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .dropdown-content {
+      position: static;
+      box-shadow: none;
+      padding: 0;
+    }
+    
+    .dropdown-menu {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 12px 12px 0 0;
+        padding: 16px;
+        transform-origin: bottom;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+  }

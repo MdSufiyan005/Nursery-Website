@@ -1,12 +1,109 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
+{% load static %}
 {% load socialaccount %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+{% endblock %}
+
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-  </form>
-  <p>Or</p>
-  <a href="{% provider_login_url 'google' %}">Sign up with Google</a>
+<div class="container">
+    <div class="form-toggle">
+        <a href="{% url 'account_login' %}" class="toggle-btn">Login</a>
+        <button class="toggle-btn active">Sign Up</button>
+    </div>
+
+    <form method="post" class="form active" id="signupForm">
+        {% csrf_token %}
+        
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="error-message">
+                {{ field.errors|striptags }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="submit-btn">Create Account</button>
+        
+        <div class="or-separator">Or</div>
+        
+        <a href="{% provider_login_url 'google' %}" class="btn-google">
+            <img src="{% static 'img/google-logo.png' %}" class="google-logo" alt="Google" />
+            Sign up with Google
+        </a>
+
+        <p class="login-link">
+            Already have an account? <a href="{% url 'account_login' %}">Login here</a>
+        </p>
+    </form>
+</div>
+
+<style>
+.error-message {
+    color: #d32f2f;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.login-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 0.6rem 0;
+    background: none;
+    border: none;
+    font-size: 1.05rem;
+    color: #888;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: 0.3s;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.toggle-btn.active {
+    color: var(--primary);
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary);
+}
+
+/* Override form field styles */
+#signupForm input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.8px solid var(--gray);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: white;
+}
+
+#signupForm input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 6px rgba(37, 96, 41, 0.3);
+    outline: none;
+}
+</style>
 {% endblock %}

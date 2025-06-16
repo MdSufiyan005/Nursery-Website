@@ -1,4 +1,5 @@
 {% extends 'main.html' %}
+{% load static %}
 
 {% block content %}
 <div class="callback-container">
@@ -34,68 +35,10 @@
     </div>
 </div>
 
-<style>
-.callback-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 20px;
-    background-color: #f3fdf5;
-}
 
-.callback-box {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-    animation: slideIn 0.3s ease-out;
-}
-
-.success-icon, .error-icon {
-    margin-bottom: 24px;
-}
-
-h1 {
-    color: #2e7d32;
-    margin-bottom: 16px;
-}
-
-.amount, .order-id {
-    color: #666;
-    margin: 8px 0;
-}
-
-.button-group {
-    margin-top: 32px;
-}
-
-.continue-shopping, .retry-payment {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #43a047;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-.continue-shopping:hover, .retry-payment:hover {
-    background-color: #2e7d32;
-    transform: translateY(-2px);
-}
-
-.error-message {
-    color: #d32f2f;
-    margin: 16px 0;
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-</style>
 {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/callback.css' %}">
+
+{% endblock style %}

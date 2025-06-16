@@ -1,195 +1,78 @@
 {% extends "main.html" %}
-{% load i18n %}
-{% load account socialaccount %}
+{% load static %}
+{% load socialaccount %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+{% endblock %}
 
 {% block content %}
-<div class="login-container">
-  <div class="login-box">
-    <h1>{% trans "Sign In" %}</h1>
-    
-    {% get_providers as socialaccount_providers %}
-    
-    {% if socialaccount_providers %}
-    <div class="social-login">
-      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </div>
-    
-    <div class="login-divider">
-      <span>or</span>
+<div class="container">
+  <div class="form-toggle">
+    <button class="toggle-btn active">Login</button>
+    <a href="{% url 'account_signup' %}" class="toggle-btn">Sign Up</a>
+  </div>
+
+  <form method="post" class="form active" id="loginForm">
+    {% csrf_token %}
+    {% if form.errors %}
+    <div class="error-message">
+      Invalid username or password.
     </div>
     {% endif %}
 
-    <form class="login-form" method="POST" action="{% url 'account_login' %}">
-      {% csrf_token %}
-      {% if form.errors %}
-        <div class="form-errors">
-          {% for error in form.non_field_errors %}
-            <p class="error-message">{{ error }}</p>
-          {% endfor %}
-        </div>
-      {% endif %}
-      
-      <div class="form-group">
-        <label for="id_login">{% trans "Email" %}</label>
-        {{ form.login }}
-      </div>
-      
-      <div class="form-group">
-        <label for="id_password">{% trans "Password" %}</label>
-        {{ form.password }}
-      </div>
-      
-      <div class="form-options">
-        <label class="remember-me">
-          {{ form.remember }} {% trans "Remember Me" %}
-        </label>
-        <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-      </div>
-
-      {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-      {% endif %}
-      
-      <button class="login-button" type="submit">{% trans "Sign In" %}</button>
-    </form>
-
-    <div class="signup-link">
-      {% trans "Don't have an account?" %} 
-      <a href="{{ signup_url }}">{% trans "Sign Up" %}</a>
+    <div class="form-group">
+      <label for="login">Username or Email</label>
+      <input
+        type="text"
+        name="login"
+        id="login"
+        class="form-control"
+        required
+      />
     </div>
-  </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="form-options">
+      <label class="remember-me">
+        <input type="checkbox" name="remember" id="remember" />
+        Remember me
+      </label>
+      <a
+        href="{% url 'account_reset_password' %}"
+        class="forgot-link"
+        >Forgot Password?</a
+      >
+    </div>
+
+    <button type="submit" class="submit-btn">Login</button>
+
+    <div class="or-separator">
+      <span>or continue with</span>
+    </div>
+
+    <a href="{% provider_login_url 'google' %}" class="btn-google">
+      <img
+        src="{% static 'img/google-logo.png' %}"
+        class="google-logo"
+        alt="Google"
+      />
+      Sign in with Google
+    </a>
+  </form>
 </div>
-
-<style>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  background-color: #f3fdf5;
-}
-
-.login-box {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-}
-
-.login-box h1 {
-  text-align: center;
-  color: #2e7d32;
-  margin-bottom: 1.5rem;
-}
-
-.social-login {
-  margin-bottom: 1.5rem;
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.login-divider {
-  text-align: center;
-  margin: 1rem 0;
-  position: relative;
-}
-
-.login-divider::before,
-.login-divider::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 45%;
-  height: 1px;
-  background-color: #ddd;
-}
-
-.login-divider::before { left: 0; }
-.login-divider::after { right: 0; }
-
-.login-divider span {
-  background-color: white;
-  padding: 0 10px;
-  color: #666;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.form-errors {
-  background-color: #fee;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-.error-message {
-  color: #d32f2f;
-  margin: 0;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.login-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #43a047;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.login-button:hover {
-  background-color: #2e7d32;
-}
-
-.signup-link {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.signup-link a {
-  color: #43a047;
-  text-decoration: none;
-}
-
-.signup-link a:hover {
-  text-decoration: underline;
-}
-</style>
 {% endblock %}

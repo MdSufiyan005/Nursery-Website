@@ -19,6 +19,13 @@ def profile(request):
     if request.user.is_authenticated:
         return redirect('display')
 
+@login_required
+def profile(request):
+    if request.user.is_authenticated:
+        return render(request,'profile.html',{'user':request.user})
+    else:
+        return render(request,'login.html',{})
+    
 def home(request):
     return render(request, 'main.html', {})
 
@@ -31,7 +38,7 @@ def display(request):
 def jsonify(value):
     return json.dumps(value, cls=DjangoJSONEncoder)
 
-@login_required
+
 def SpecificPlant(request, plant_id):
     plant = Plant.objects.get(id=plant_id)
     similar_plants = Plant.objects.filter(Category=plant.Category).exclude(id=plant_id)
@@ -334,7 +341,3 @@ def callback(request):
             "status": "failure",
             "message": "An error occurred during payment processing"
         })
-
-@login_required
-def order_success(request):
-    return render(request, 'order_success.html')
