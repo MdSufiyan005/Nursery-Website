@@ -59,6 +59,12 @@ class OrderItem(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=254)
+    email = models.EmailField(null=True,blank= True)  # This field was missing
+    phone_number = models.CharField(max_length=15)
+    address = models.TextField()
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
     amount = models.FloatField()
     status = models.CharField(
         max_length=254, 

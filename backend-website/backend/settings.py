@@ -14,9 +14,10 @@ from pathlib import Path
 
 import os
 from dotenv import load_dotenv
-from urllib.parse import urlparse
-
 load_dotenv()
+from urllib.parse import urlparse
+from decouple import config
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -147,8 +148,8 @@ SOCIALACCOUNT_PROVIDERS = {
         # credentials, or list them here:
         "APPS": [
             {
-                "client_id": os.environ.get("CLIENT_ID"),
-                "secret": os.environ.get("SECRET_KEY"),
+                "client_id": config("CLIENT_ID"),
+                "secret": config("SECRET_KEY"),
                 "key": "",
                 "settings": {
                     # You can fine tune these settings per app:
@@ -169,8 +170,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 # Razor pay Cred
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+RAZORPAY_KEY_ID = config("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET")
 
 
 # Django allauth config
@@ -180,7 +181,14 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Use app password for Gmail
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default sender email
 
 ACCOUNT_LOGIN_METHODS = {'username','email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']

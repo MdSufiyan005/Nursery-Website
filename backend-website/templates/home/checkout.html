@@ -64,68 +64,229 @@ body { background-color: #f3fdf5; font-family: 'Segoe UI', sans-serif; margin: 0
 }
 @media (max-width: 600px) { .cart-table th, .cart-table td { padding: 8px 4px; font-size: 14px; } .quantity-input { width: 50px; } .order-summary { max-width: 100%; } }
 
+.shipping-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9fff9;
+    border-radius: 12px;
+}
 
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.error-message {
+    color: #e53935;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    color: #2e7d32;
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8f5e9;
+}
 </style>
 
 <div class="checkout-wrapper">
-  <div class="checkout-header">
-    <h2>🛒 Shopping Cart</h2>
-    <p>Your selected items</p>
-  </div>
-
-  <table class="cart-table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Subtotal</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in cart_items %}
-      <tr data-plant-id="{{ item.plant.id }}" data-price="{{ item.plant.price }}">
-        <td>{{ item.plant.name }}</td>
-        <td>
-          <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1">
-        </td>
-        <td class="unit-price">₹{{ item.plant.price }}</td>
-        <td class="item-subtotal">₹{{ item.line_total }}</td>
-        <td>
-          <button class="remove-item" data-plant-id="{{ item.plant.id }}">❌</button>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5" style="text-align: center; padding: 20px;">Your cart is empty</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  {% if cart_items %}
-  <div class="order-summary">
-    <h3>Order Summary</h3>
-    <div class="summary-line total-line">
-      <span>Total:</span>
-      <span id="sum-total">₹{{ order.total }}</span>
+    <div class="checkout-header">
+        <h2>🛒 Checkout</h2>
+        <p>Complete your order</p>
     </div>
-    <form action="{% url 'payment' %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="amount" value="{{ order.total }}">
-        <input type="hidden" name="name" value="{{ request.user.username }}">
-        <button type="submit" class="proceed-button">
-            💳 Proceed to Payment
-        </button>
-    </form>
-  </div>
-  {% endif %}
 
+    <div class="form-section">
+        <h3 class="section-title">Order Summary</h3>
+        <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart_items %}
+              <tr data-plant-id="{{ item.plant.id }}" data-price="{{ item.plant.price }}">
+                <td>{{ item.plant.name }}</td>
+                <td>
+                  <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1">
+                </td>
+                <td class="unit-price">₹{{ item.plant.price }}</td>
+                <td class="item-subtotal">₹{{ item.line_total }}</td>
+                <td>
+                  <button class="remove-item" data-plant-id="{{ item.plant.id }}">❌</button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">Your cart is empty</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        <table class="cart-table">
+            {% comment %} <thead>
+                <tr>
+                    <th>Plant</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr data-plant-id="{{ item.plant.id }}" data-price="{{ item.plant.price }}">
+                    <td>{{ item.plant.name }}</td>
+                    <td>
+                        <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1">
+                    </td>
+                    <td>₹{{ item.plant.price }}</td>
+                    <td class="line-total">₹{{ item.line_total }}</td>
+                    <td>
+                        <button class="remove-item" data-plant-id="{{ item.plant.id }}">❌</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Total Amount:</strong></td>
+                    <td colspan="2"><strong>₹{{ total_amount }}</strong></td>
+                </tr>
+            </tfoot> {% endcomment %}
+        </table>
+
+        {% if cart_items %}
+        <form action="{% url 'order_payment' %}" method="POST" id="checkoutForm">
+            {% csrf_token %}
+            <input type="hidden" name="total_amount" value="{{ total_amount }}">
+            <div class="shipping-form">
+                <h3 class="section-title">Shipping Details</h3>
+                
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" value="{{ request.user.get_full_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ request.user.email }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone_number" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Delivery Address</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
+
+                <div class="form-row" style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+
+                    <div class="form-group" style="flex: 0.5;">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" id="pincode" name="pincode" pattern="[0-9]{6}" title="Please enter a valid 6-digit pincode" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <h3>Payment Summary</h3>
+                <div class="summary-line total-line">
+                    <span>Total Amount:</span>
+                    <span id="sum-total">₹{{ total_amount }}</span>
+                </div>
+                <input type="hidden" name="amount" value="{{ total_amount }}">
+                <button type="submit" class="proceed-button" id="paymentButton">
+                    💳 Proceed to Payment
+                </button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('checkoutForm');
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Basic form validation
+        const formData = new FormData(form);
+        const phone = formData.get('phone_number');
+        const pincode = formData.get('pincode');
+        
+        if (!/^\d{10}$/.test(phone)) {
+            alert('Please enter a valid 10-digit phone number');
+            return;
+        }
+        
+        if (!/^\d{6}$/.test(pincode)) {
+            alert('Please enter a valid 6-digit pincode');
+            return;
+        }
+
+        // Disable the submit button to prevent double submission
+        const submitButton = document.getElementById('paymentButton');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '⏳ Processing...';
+
+        try {
+            // Simply submit the form directly instead of using fetch
+            form.submit();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Something went wrong. Please try again.');
+            submitButton.disabled = false;
+            submitButton.innerHTML = '💳 Proceed to Payment';
+        }
+    });
+
     // Handle quantity changes
     document.querySelectorAll('.quantity-input').forEach(input => {
         input.addEventListener('change', async (e) => {

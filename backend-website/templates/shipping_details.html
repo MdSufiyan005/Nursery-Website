@@ -1,0 +1,107 @@
+haider/Coding/Nursery-Website/backend-website/templates/shipping_details.html
+
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="shipping-container">
+    <div class="shipping-box">
+        <h1>Shipping Details</h1>
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <p>Total Amount: ₹{{ total_amount }}</p>
+        </div>
+
+        <form method="POST" action="{% url 'order_payment' %}" class="shipping-form">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="error-message">
+                    {{ field.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="submit-button">Proceed to Payment</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.shipping-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    background-color: #f3fdf5;
+}
+
+.shipping-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+.shipping-box h1 {
+    color: #2e7d32;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.order-summary {
+    background-color: #f3fdf5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #43a047;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #2e7d32;
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

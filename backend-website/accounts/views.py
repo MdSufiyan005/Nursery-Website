@@ -1,20 +1,19 @@
-from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth.decorators import login_required
-from data.models import Plant,Order,OrderItem
-from django.conf import settings
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from django.core.serializers.json import DjangoJSONEncoder
-import json
-from django.template.defaultfilters import register
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages  # Add this import
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-import razorpay
+from data.models import Plant, Order, OrderItem
 from data.constants import PaymentStatus
-from django.contrib.auth.signals import user_logged_in
-from django.contrib.auth import login, get_user_model
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from allauth.socialaccount.models import SocialAccount
-
+from django.conf import settings
+import razorpay
+from .utils.emails import send_order_confirmation
+from .forms import ShippingDetailsForm
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.template.defaultfilters import register
+import os 
 @login_required
 def profile(request):
     if request.user.is_authenticated:
@@ -104,18 +103,21 @@ def cart_view(request):
     total = 0
     
     for pid, qty in cart.items():
-        plant = get_object_or_404(Plant, id=pid)
-        line_total = plant.price * qty
-        items.append({
-            'plant': plant,
-            'quantity': qty,
-            'line_total': line_total,
-        })
-        total += line_total
+        try:
+            plant = get_object_or_404(Plant, id=pid)
+            line_total = float(plant.price) * int(qty)
+            items.append({
+                'plant': plant,
+                'quantity': qty,
+                'line_total': line_total,
+            })
+            total += line_total
+        except Plant.DoesNotExist:
+            continue
 
     context = {
         'cart_items': items,
-        'order': {'total': total},
+        'total_amount': total,  # Changed from order.total to total_amount
     }
     
     return render(request, 'home/checkout.html', context)
@@ -144,38 +146,98 @@ def remove_from_cart(request, plant_id):
     }, status=404)
 
 @login_required
-def order_payment(request):
+def shipping_details(request):
+    if request.method == 'POST':
+        form = ShippingDetailsForm(request.POST, user=request.user)
+        if form.is_valid():
+            request.session['shipping_details'] = form.cleaned_data
+            return redirect('order_payment')
+    else:
+        form = ShippingDetailsForm(user=request.user)
+
+    # Get cart from session
     cart = request.session.get('cart', {})
-    if not cart:
+    
+    # Calculate total amount from cart items
+    total_amount = 0
+    cart_items = []
+    
+    for plant_id, quantity in cart.items():
+        try:
+            plant = Plant.objects.get(id=plant_id)
+            subtotal = plant.price * quantity
+            total_amount += subtotal
+            cart_items.append({
+                'plant': plant,
+                'quantity': quantity,
+                'subtotal': subtotal
+            })
+        except Plant.DoesNotExist:
+            continue
+
+    return render(request, 'shipping_details.html', {
+        'form': form,
+        'cart_items': cart_items,
+        'total_amount': total_amount
+    })
+
+@login_required
+def order_payment(request):
+    if request.method != 'POST':
         return redirect('cart_view')
-    
-    # Calculate total and create order items
-    total = 0
-    order_items = []
-    
-    for pid, qty in cart.items():
-        plant = get_object_or_404(Plant, id=pid)
-        total += float(plant.price) * qty
-        order_items.append({
-            'plant': plant,
-            'quantity': qty,
-            'price': plant.price
-        })
 
     try:
+        # Get cart and calculate total
+        cart = request.session.get('cart', {})
+        if not cart:
+            messages.error(request, "Your cart is empty")
+            return redirect('cart_view')
+
+        total = 0
+        order_items = []
+        
+        for pid, qty in cart.items():
+            try:
+                plant = get_object_or_404(Plant, id=pid)
+                item_total = float(plant.price) * int(qty)
+                total += item_total
+                order_items.append({
+                    'plant': plant,
+                    'quantity': qty,
+                    'price': plant.price,
+                    'total': item_total
+                })
+            except Plant.DoesNotExist:
+                continue
+
+        # Verify total matches form submission
+        form_total = float(request.POST.get('total_amount', 0))
+        if abs(form_total - total) > 0.01:  # Allow for small floating point differences
+            messages.error(request, "Order total mismatch. Please try again.")
+            return redirect('cart_view')
+
+        # Initialize Razorpay
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        
+        # Create Razorpay order (amount in paise)
         payment_order = client.order.create({
             "amount": int(total * 100),
             "currency": "INR",
             "payment_capture": "1"
         })
 
-        # Create order and order items
+        # Create order in database
         order = Order.objects.create(
             user=request.user,
-            name=request.user.username,
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            phone_number=request.POST.get('phone_number'),
+            address=request.POST.get('address'),
+            city=request.POST.get('city'),
+            state=request.POST.get('state'),
+            pincode=request.POST.get('pincode'),
             amount=total,
-            provider_order_id=payment_order["id"]
+            provider_order_id=payment_order['id']
         )
 
         # Create order items
@@ -188,21 +250,21 @@ def order_payment(request):
                 price=item['price']
             )
 
-        # Update callback URL to use reverse URL resolution
-        from django.urls import reverse
-        callback_url = request.build_absolute_uri(reverse('payment_callback'))
-
-        payment_data = {
-            "callback_url": callback_url,
+        # Prepare payment context
+        context = {
             "razorpay_key": settings.RAZORPAY_KEY_ID,
             "order": order,
+            "callback_url": request.build_absolute_uri(reverse('payment_callback')),
+            "total_amount": total,
+            "order_items": order_items
         }
         
-        return render(request, "payment.html", payment_data)
-    
+        return render(request, "payment.html", context)
+
     except Exception as e:
-        print(e)
-        return render(request, "payment.html", {"error": "Something went wrong"})
+        print(f"Payment initialization error: {str(e)}")
+        messages.error(request, "Unable to initialize payment. Please try again.")
+        return redirect('cart_view')
 
 @login_required
 @csrf_exempt
@@ -234,15 +296,19 @@ def callback(request):
             order.status = PaymentStatus.SUCCESS
             order.save()
             
-            # Update inventory and clear cart
-            order.update_inventory()
+            # Try to send email but don't fail if it doesn't work
+            email_sent = send_order_confirmation(order, request.user)
+            
+            # Clear cart and update inventory
             if 'cart' in request.session:
                 del request.session['cart']
                 request.session.modified = True
             
             return render(request, "callback.html", {
                 "status": "success",
-                "message": "Payment successful!",
+                "message": "Payment successful!" + (
+                    "" if email_sent else " (Order confirmation email could not be sent)"
+                ),
                 "order_id": order.id,
                 "amount": order.amount,
                 "user": request.user
@@ -268,3 +334,7 @@ def callback(request):
             "status": "failure",
             "message": "An error occurred during payment processing"
         })
+
+@login_required
+def order_success(request):
+    return render(request, 'order_success.html')
