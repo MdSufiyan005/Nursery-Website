@@ -1,0 +1,193 @@
+{% block navbar %}
+<style>
+/* Base Navbar Style (Glassy) */
+.navbar {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 0 0 16px 16px;
+  padding: 16px 32px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #2e7d32;
+  text-decoration: none;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.navbar-links a {
+  color: #1c311d;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.3s ease;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.navbar-links a:hover {
+  background-color: rgba(46, 125, 50, 0.2);
+  color: #2e7d32;
+}
+
+/* COG Dropdown */
+.dropdown {
+  position: relative;
+}
+.dropdown-btn {
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1c311d;
+  transition: color 0.3s ease;
+}
+.dropdown-btn:hover {
+  color: #2e7d32;
+}
+.dropdown-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 1001;
+}
+.dropdown-menu a {
+  text-decoration: none;
+  color: #1c311d;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+.dropdown-menu a:hover {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+}
+
+/* Hamburger + Mobile Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: #2e7d32;
+  border-radius: 2px;
+}
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 16px;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+.mobile-menu a {
+  margin: 8px 0;
+  text-decoration: none;
+  color: #1c311d;
+}
+.mobile-menu a:hover {
+  color: #2e7d32;
+}
+.mobile-menu.show {
+  display: flex;
+}
+.dropdown-menu.show {
+  display: flex;
+}
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .mobile-menu.show {
+    display: flex;
+  }
+}
+</style>
+
+<nav class="navbar">
+  <a href="{% url 'home' %}" class="navbar-logo">🌱 Rudra FLower Nursery</a>
+
+  <div class="navbar-links">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'display' %}">Browse</a>
+    <a href="#">Profile</a>
+
+    {% if user.is_authenticated %}
+    <div class="dropdown">
+      <button class="dropdown-btn" onclick="toggleDropdown()">⚙️</button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="#">Settings</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </div>
+    </div>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+  </div>
+
+  <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="{% url 'home' %}">Home</a>
+  <a href="{% url 'display' %}">Browse</a>
+  <a href="#">Profile</a>
+  {% if user.is_authenticated %}
+    <a href="#">Settings</a>
+    <a href="{% url 'logout' %}">Logout</a>
+  {% else %}
+    <a href="{% url 'login' %}">Login</a>
+  {% endif %}
+</div>
+
+<script>
+function toggleDropdown() {
+  document.getElementById("dropdownMenu").classList.toggle("show");
+}
+window.onclick = function(event) {
+  if (!event.target.matches('.dropdown-btn')) {
+    const dropdowns = document.getElementsByClassName("dropdown-menu");
+    for (let i = 0; i < dropdowns.length; i++) {
+      dropdowns[i].classList.remove('show');
+    }
+  }
+}
+</script>
+{% endblock %}

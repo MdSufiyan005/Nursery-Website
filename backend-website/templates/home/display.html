@@ -2,142 +2,407 @@
 
 {% block content %}
 <style>
-body {
-    background-color: #f0fdf4;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body, html {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: #2c3e14;
+  background-color: #dcfce5;
+  overflow-x: hidden;
 }
 
-/* Grid Container */
+/* Suggestions Dropdown */
+#suggestions {
+  border: 1px solid #ccc;
+  max-width: 300px;
+  position: absolute;
+  background: white;
+  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+/* Suggestions Dropdown Box */
+#suggestions {
+  width: 480px;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1.5px solid #a5d6a7;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 15;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Individual Suggestion Item */
+.suggestion {
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #2e7d32;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fff;
+  transition: background 0.2s;
+}
+
+.suggestion:last-child {
+  border-bottom: none;
+}
+
+.suggestion:hover {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+}
+
+
+/* Product Card Grid */
 .card-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 40px;               /* Increased gap between cards */
-    padding: 80px 50px;       /* More space above and below grid */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding: 4rem 2rem;
 }
 
-/* Individual Card */
+/* Card */
 .card {
-    width: 270px;
-    background-color: #ffffff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 128, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 20px;     /* Additional vertical space */
+  width: 280px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(0, 128, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 /* Image Container */
 .image-container {
-    width: 100%;
-    height: 200px;
-    background-color: #e9f7ef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  width: 100%;
+  height: 180px;
+  background-color: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
-
 .home-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
 }
-
 .card:hover .home-image {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
-/* Text Content */
+/* Card Text */
 .text-container {
-    padding: 20px;
-    text-align: center;
+  padding: 1.2rem;
+  text-align: center;
 }
-
 .text-container h1 {
-    font-size: 20px;
-    color: #2e7d32;
-    margin-bottom: 10px;
+  font-size: 1.4rem;
+  color: #256d36;
+  margin-bottom: 0.5rem;
 }
-
 .text-container p {
-    font-size: 15px;
-    color: #4e704e;
+  font-size: 0.95rem;
+  color: #4e704e;
 }
 
-/* Purchase Button */
+/* Button */
 .purchase-button {
-    margin: 15px auto 25px;
-    padding: 10px 20px;
-    background-color: #43a047;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    text-align: center;
-    display: inline-block;
-    text-decoration: none;
+  margin: 1rem auto 1.5rem;
+  padding: 10px 20px;
+  background-color: #43a047;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  text-decoration: none;
 }
-
 .purchase-button:hover {
-    background-color: #2e7d32;
-    transform: scale(1.05);
+  background-color: #2e7d32;
+  transform: scale(1.05);
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 900px) {
-    .card {
-        width: 45%;
-    }
+/* Slider */
+#price-slider {
+  margin: 3rem auto;
+  max-width: 400px;
+  height: 8px;
+}
+.noUi-target {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+#price-slider .noUi-base {
+  background: #e0e0e0;
+  border-radius: 20px;
+  height: 8px;
+}
+#price-slider .noUi-connect {
+  background: #43a047;
+  border-radius: 20px;
+}
+#price-slider .noUi-handle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #43a047;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  top: -6px;
+  cursor: grab;
+}
+#price-slider .noUi-handle:hover {
+  background: #dcedc8;
+  transform: scale(1.05);
+}
+.noUi-tooltip {
+  background: #43a047;
+  color: white;
+  font-size: 13px;
+  border-radius: 6px;
+  padding: 3px 7px;
+  transform: translateY(-120%);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+#price-slider .noUi-handle::before,
+#price-slider .noUi-handle::after {
+  display: none !important;
 }
 
+#search {
+  border: 2px solid #a5d6a7;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+#search:focus {
+  border-color: #43a047;
+  box-shadow: 0 0 6px rgba(67, 160, 71, 0.4);
+}
+
+/* Dropdown Styling */
+select {
+  padding: 8px 12px;
+  font-size: 15px;
+  border: 2px solid #c8e6c9;
+  border-radius: 8px;
+  margin: 0 5px;
+  background-color: #ffffff;
+  color: #2c3e14;
+  transition: border-color 0.3s;
+}
+select:focus {
+  border-color: #43a047;
+  outline: none;
+}
+
+/* Filter & Reset Buttons */
+#toggleFilterBtn, .btn-reset, #filterForm button {
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+#toggleFilterBtn {
+  background-color: #66bb6a;
+  color: white;
+}
+#toggleFilterBtn:hover {
+  background-color: #388e3c;
+  transform: scale(1.03);
+}
+.btn-reset {
+  background-color: #e57373;
+  color: white;
+  text-decoration: none;
+}
+.btn-reset:hover {
+  background-color: #d32f2f;
+}
+#filterForm button {
+  background-color: #43a047;
+  color: white;
+}
+#filterForm button:hover {
+  background-color: #2e7d32;
+}
+
+/* "No Results" Message */
+p[style*="text-align:center"] {
+  color: #c62828;
+  font-weight: 500;
+}
+
+/* Inline Filter Bar */
+#filterForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Price Dropdown styling */
+#priceDropdown {
+  position: absolute;
+  background-color: white;
+  border: 1.5px solid #a5d6a7;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 15px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: none;
+}
+
+#priceDropdown.show {
+  display: block;
+}
+
+
+
+/* Responsive fallback */
 @media (max-width: 600px) {
-    .card-grid {
-        padding: 40px 20px;
-        gap: 30px;
-    }
+  #filterForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .card {
-        width: 100%;
-    }
-
-    .image-container {
-        height: 180px;
-    }
-
-    .text-container {
-        padding: 16px;
-    }
-
-    .text-container h1 {
-        font-size: 18px;
-    }
-
-    .text-container p {
-        font-size: 14px;
-    }
-
-    .purchase-button {
-        width: 80%;
-        padding: 8px 0;
-        font-size: 14px;
-    }
+  #priceDropdown {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
+
+
+/* Responsive Tweaks for Inputs */
+@media (max-width: 600px) {
+  #search {
+    width: 90%;
+    font-size: 15px;
+  }
+  select {
+    font-size: 14px;
+    margin: 5px 0;
+    width: 90%;
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .card {
+    width: 45%;
+  }
+}
+@media (max-width: 600px) {
+  .card-grid {
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+  .card {
+    width: 100%;
+  }
+  .image-container {
+    height: 160px;
+  }
+  .text-container h1 {
+    font-size: 1.2rem;
+  }
+  .purchase-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}    
 </style>
 
+<h1 style="text-align:center; margin-top: 30px;">Search Plants</h1>
+
+<!-- Search Input -->
+<form id="searchForm" action="{% url 'display' %}" method="get" style="text-align:center; margin-bottom: 20px; position: relative;">
+    <input type="text" id="search" name="q" autocomplete="off" placeholder="Search for Plants"
+           value="{{ query }}" style="padding: 10px; width: 480px; font-size: 16px;">
+    <div id="suggestions"></div>
+</form>
+
+<!-- Apply Filter & Reset Button -->
+<div id="filterSection" style="text-align: center; margin-bottom: 30px;">
+    <form method="get" id="filterForm">
+
+        <!-- Category Dropdown -->
+        <select name="category" id="categorySelect">
+            <option value="">All Categories</option>
+            <option value="Indoor" {% if selected_category == 'Indoor' %}selected{% endif %}>Indoor</option>
+            <option value="Outdoor" {% if selected_category == 'Outdoor' %}selected{% endif %}>Outdoor</option>
+        </select>
+
+        <!-- Sort Dropdown -->
+        <select name="sort" id="sortSelect">
+            <option value="">Sort by</option>
+            <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+        </select>
+
+        <!-- Hidden inputs to hold slider values -->
+        <input type="hidden" name="min_price" id="min_price_input">
+        <input type="hidden" name="max_price" id="max_price_input">
+
+        <!-- Price Range Toggle -->
+        <div>
+          <button type="button" id="priceToggleBtn" class="dropdown-btn">Price Range ▼</button>
+          <div id="priceDropdown" class="dropdown-content" style="display: none;">
+            <div id="price-slider" style="margin: 20px auto; width: 300px;"></div>
+            <p>
+              ₹<span id="min_price_display">{{ min_price|default:real_min_price }}</span> 
+              - ₹<span id="max_price_display">{{ max_price|default:real_max_price }}</span>
+            </p>
+            <button type="submit" style="margin-top: 10px;">Apply</button>
+          </div>
+        </div>
+
+
+        <!-- Filter and Reset Buttons -->
+        <!-- <button type="submit" style="margin-top: 10px;">Apply Filter</button> -->
+
+        {% if selected_category or selected_sort or min_price or max_price %}
+            <a href="{% url 'display' %}" class="btn-reset" style="margin-left: 10px;">Reset Filters</a>
+        {% endif %}
+
+    </form>
+</div>
+
+
+<!-- Results Section -->
+{% if plants %}
 <div class="card-grid">
     {% for plant in plants %}
     <div class="card">
@@ -152,4 +417,156 @@ body {
     </div>
     {% endfor %}
 </div>
-{% endblock content %}
+{% elif query %}
+<p style="text-align:center; font-size: 18px;">No results found for "{{ query }}"</p>
+{% endif %}
+
+
+<!-- JavaScript for suggestions -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // ====== Search Suggestions ======
+    const searchInput = document.getElementById('search');
+    const suggestionsBox = document.getElementById('suggestions');
+    const searchForm = document.getElementById('searchForm');
+
+    searchInput?.addEventListener('keyup', (e) => {
+        const query = searchInput.value.trim();
+
+        if (query.length === 0) {
+            suggestionsBox.innerHTML = '';
+            return;
+        }
+
+        if (e.key === 'Enter') {
+            searchForm.submit();
+            return;
+        }
+
+        fetch(`/ajax/suggestions/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                suggestionsBox.innerHTML = '';
+                data.results.forEach(item => {
+                    const div = document.createElement('div');
+                    div.textContent = item;
+                    div.classList.add('suggestion');
+                    div.addEventListener('click', () => {
+                        searchInput.value = item;
+                        suggestionsBox.innerHTML = '';
+                        searchForm.submit();
+                    });
+                    suggestionsBox.appendChild(div);
+                });
+            });
+    });
+
+    // ====== Price Slider ======
+    const slider = document.getElementById('price-slider');
+    if (slider && window.noUiSlider) {
+        const minStart = parseInt("{{ min_price|default_if_none:real_min_price|default_if_none:0 }}") || 0;
+        const maxStart = parseInt("{{ max_price|default_if_none:real_max_price|default_if_none:1000 }}") || 1000;
+        const realMin = parseInt("{{ real_min_price|default_if_none:0 }}") || 0;
+        const realMax = parseInt("{{ real_max_price|default_if_none:1000 }}") || 1000;
+
+        noUiSlider.create(slider, {
+            start: [minStart, maxStart],
+            connect: true,
+            step: 1,
+            range: {
+                min: realMin,
+                max: realMax
+            },
+            tooltips: [true, true],
+            format: {
+                to: value => Math.round(value),
+                from: value => Number(value)
+            }
+        });
+
+        const minInput = document.getElementById('min_price_input');
+        const maxInput = document.getElementById('max_price_input');
+        const minDisplay = document.getElementById('min_price_display');
+        const maxDisplay = document.getElementById('max_price_display');
+
+        slider.noUiSlider.on('update', function (values) {
+            const [min, max] = values;
+            if (minInput) minInput.value = min;
+            if (maxInput) maxInput.value = max;
+            if (minDisplay) minDisplay.textContent = min;
+            if (maxDisplay) maxDisplay.textContent = max;
+        });
+    }
+
+    // ====== Filter Section Buttons ======
+    const categoryBtn = document.getElementById("categoryToggle");
+    const sortBtn = document.getElementById("sortToggle");
+    const priceBtn = document.getElementById("priceToggle");
+
+    const categoryDropdown = document.getElementById("categoryDropdown");
+    const sortDropdown = document.getElementById("sortDropdown");
+    const priceSliderWrap = document.getElementById("priceSliderWrap");
+
+    function toggleElement(elem) {
+        if (!elem) return;
+        elem.style.display = (elem.style.display === "none" || !elem.style.display)
+            ? "block"
+            : "none";
+    }
+
+    categoryBtn?.addEventListener("click", () => {
+        toggleElement(categoryDropdown);
+        sortDropdown.style.display = "none";
+        priceSliderWrap.style.display = "none";
+    });
+
+    sortBtn?.addEventListener("click", () => {
+        toggleElement(sortDropdown);
+        categoryDropdown.style.display = "none";
+        priceSliderWrap.style.display = "none";
+    });
+
+    priceBtn?.addEventListener("click", () => {
+        toggleElement(priceSliderWrap);
+        categoryDropdown.style.display = "none";
+        sortDropdown.style.display = "none";
+    });
+
+    // ====== Price Range Toggle ======
+    const priceToggleBtn = document.getElementById("priceToggleBtn");
+    const priceDropdown = document.getElementById("priceDropdown");
+
+    priceToggleBtn?.addEventListener("click", function () {
+        if (priceDropdown) {
+            const isHidden = priceDropdown.style.display === "none" || !priceDropdown.style.display;
+            priceDropdown.style.display = isHidden ? "block" : "none";
+            priceToggleBtn.textContent = isHidden ? "Price Range ▲" : "Price Range ▼";
+        }
+    });
+
+
+    // Auto-submit on dropdown change
+document.getElementById('categorySelect')?.addEventListener('change', () => {
+    document.getElementById('filterForm')?.submit();
+});
+document.getElementById('sortSelect')?.addEventListener('change', () => {
+    document.getElementById('filterForm')?.submit();
+});
+
+// Auto-submit on slider change
+if (slider && window.noUiSlider) {
+    slider.noUiSlider.on('change', function (values) {
+        const [min, max] = values;
+        if (minInput) minInput.value = min;
+        if (maxInput) maxInput.value = max;
+        document.getElementById('filterForm')?.submit();
+    });
+}
+
+
+    });
+</script>
+    
+
+
+{% endblock %}

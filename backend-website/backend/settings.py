@@ -175,7 +175,7 @@ ACCOUNT_LOGIN_METHODS = {'username','email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[CFE]'
-SOCIALACCOUNT_PROVIDERS = {}
+# SOCIALACCOUNT_PROVIDERS = {}
 
 
 # Internationalization
