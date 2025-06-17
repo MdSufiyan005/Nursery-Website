@@ -1,6 +1,7 @@
 from django import forms
 from data.models import Order
 from django.core.validators import RegexValidator
+from .models import ProfileDetail
 
 class ShippingDetailsForm(forms.ModelForm):
     phone_regex = RegexValidator(
@@ -24,3 +25,8 @@ class ShippingDetailsForm(forms.ModelForm):
         if user and user.is_authenticated:
             self.fields['name'].initial = user.get_full_name() or user.username
             self.fields['email'].initial = user.email
+        
+class ProfileDetailForm(forms.ModelForm):
+    class Meta:
+        model = ProfileDetail
+        fields = ('name', 'email', 'contact', 'address')

@@ -1,49 +1,61 @@
-{% extends "main.html" %}
-{% load i18n %}
-{% load allauth %}
-{% load static %}
-
-{% block style %}<link rel="stylesheet" href="{% static 'css/third_login.css'%}" />{% endblock style %}
-
-{% block head_title %}
-    {% trans "Sign In" %}
-{% endblock head_title %}
-
-{% block content %}
+{% extends "main.html" %} {% load i18n %} {% load allauth %} {% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/third_login.css' %}" />
+{% endblock head %} {% block head_title %} {% trans "Sign In" %} {% endblock
+head_title %} {% block content %}
 <div class="social-login-container">
-    <div class="social-login-box">
-        {% if process == "connect" %}
-            <div class="provider-icon">
-                <svg viewBox="0 0 24 24" width="48" height="48">
-                    <path fill="#4285f4" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
-                </svg>
-            </div>
-            <h1>{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h1>
-            <p class="description">{% blocktrans with provider.name as provider %}You are about to connect a new third-party account from {{ provider }}.{% endblocktrans %}</p>
-        {% else %}
-            <div class="provider-icon">
-                <svg viewBox="0 0 24 24" width="48" height="48">
-                    <path fill="#4285f4" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
-                </svg>
-            </div>
-            <h1>{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h1>
-            <p class="description">{% blocktrans with provider.name as provider %}You are about to sign in using your {{ provider }} account.{% endblocktrans %}</p>
-        {% endif %}
-
-        <form method="post" class="social-login-form">
-            {% csrf_token %}
-            <button type="submit" class="continue-button">
-                {% trans "Continue" %}
-                <svg viewBox="0 0 24 24" width="16" height="16">
-                    <path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                </svg>
-            </button>
-        </form>
-
-        <a href="{% url 'account_login' %}" class="back-link">
-            {% trans "Back to Login" %}
-        </a>
+  <div class="social-login-box">
+    {% if process == "connect" %}
+    <div class="provider-icon">
+      <svg viewBox="0 0 24 24" width="48" height="48">
+        <path fill="#4285f4" d="..." />
+      </svg>
     </div>
-</div>
 
+    <h1>
+      {% blocktrans with provider=provider.name %} Connect {{ provider }} {%
+      endblocktrans %}
+    </h1>
+
+    <p class="description">
+      {% blocktrans with provider=provider.name %} You are about to connect a
+      new third-party account from {{ provider }}. {% endblocktrans %}
+    </p>
+
+    {% else %}
+    <div class="provider-icon">
+      <svg viewBox="0 0 24 24" width="48" height="48">
+        <path fill="#4285f4" d="..." />
+      </svg>
+    </div>
+
+    <h1>
+      {% blocktrans with provider=provider.name %} Sign In via {{ provider }} {%
+      endblocktrans %}
+    </h1>
+
+    <p class="description">
+      {% blocktrans with provider=provider.name %} You are about to sign in
+      using your {{ provider }} account. {% endblocktrans %}
+    </p>
+    {% endif %}
+
+    <form method="post" class="social-login-form">
+      {% csrf_token %}
+      <button type="submit" class="continue-button">
+        {% trans "Continue" %}
+        <svg viewBox="0 0 24 24" width="16" height="16">
+          <path
+            fill="currentColor"
+            d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+          />
+        </svg>
+      </button>
+    </form>
+
+    <a href="{% url 'account_login' %}" class="back-link">
+      {% trans "Back to Login" %}
+    </a>
+  </div>
+</div>
 {% endblock content %}

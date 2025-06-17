@@ -1,8 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path,include
-from accounts.views import profile
-
+# from accounts.views import profile
 
 
 
@@ -11,5 +10,6 @@ urlpatterns = [
     path('',include('accounts.urls')),  
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('allauth.socialaccount.urls')),
-    path('accounts/profile/',profile, name='profile'),
+    # path('accounts/profile/',profile, name='profile'),
+    path('product/',include('product.urls')),
 ]

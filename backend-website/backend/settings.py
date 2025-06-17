@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'data',
     'accounts',
+    'product',
 
     # Third party apps
     "allauth_ui",
@@ -183,8 +184,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Use app password for Gmail
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') # Use app password for Gmail
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default sender email
 
 ACCOUNT_LOGIN_METHODS = {'email'}

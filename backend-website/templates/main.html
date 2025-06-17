@@ -1,6 +1,5 @@
 {% load static%}
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,11 +10,14 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
     />
-    {% block style %}<link rel="stylesheet" href="{% static 'css/home_page.css'%}" />{% endblock style %}
-    </head>
+    {% block style %}
+    <link rel="stylesheet" href="{% static 'css/home_page.css'%}" />
+    {% endblock style %}
+  </head>
   <body>
-    {% block content %}
-    {% comment %} @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); {% endcomment %}
+    {% block content %} {% comment %} @import
+    url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    {% endcomment %}
 
     <nav>
       <div class="logo">Rudra Nursery</div>
@@ -27,7 +29,7 @@
         <li><a href="/product/shop/">Shop</a></li>
         <li><a href="/product/contact/">Contact</a></li>
         {% endcomment %}
-        <li><a href="/accounts/login/">Login</a></li>
+        <li><a href="accounts/login/">Login</a></li>
       </ul>
     </nav>
     <div class="blur-overlay"></div>
@@ -113,9 +115,8 @@
         </address>
       </div>
     </section>
-    {% endblock content %}
-   {% block script %}
-   <script src="{% static 'js/home_page.js' %}"></script>
+    {% endblock content %} {% block script %}
+    <script src="{% static 'js/home_page.js' %}"></script>
     {% endblock script %}
-</body>
+  </body>
 </html>

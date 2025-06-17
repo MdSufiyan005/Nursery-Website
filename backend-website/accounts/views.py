@@ -13,18 +13,26 @@ from .forms import ShippingDetailsForm
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.template.defaultfilters import register
+from .forms import ProfileDetailForm
 import os 
-@login_required
-def profile(request):
-    if request.user.is_authenticated:
-        return redirect('display')
 
-@login_required
+# @login_required
+# def profile(request):
+#     if request.user.is_authenticated:
+#         return redirect('display')
+
+# @login_required
 def profile(request):
-    if request.user.is_authenticated:
-        return render(request,'profile.html',{'user':request.user})
-    else:
-        return render(request,'login.html',{})
+    form = ProfileDetailForm()
+    submitted = False
+
+    if request.method == 'POST':
+        form = ProfileDetailForm(request.POST)
+        if form.is_valid():
+            form.save()
+            submitted = True
+
+    return render(request, 'profile.html', {'user': request.user, 'form': form, 'submitted': submitted})
     
 def home(request):
     return render(request, 'main.html', {})

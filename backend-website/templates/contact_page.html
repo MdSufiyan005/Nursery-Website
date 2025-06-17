@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact - Rudra Flower Nursery</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+    <script src="{% static 'js/contact.js' %}"></script>
+  </head>
+  <body>
+    <div class="blur-overlay"></div>
+    <nav>
+      <div class="logo">Rudra Nursery</div>
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links">
+        <li><a href="/home_afterlogin/">Home</a></li>
+        <li><a href="/product/shop/">Shop</a></li>
+        <li>
+          <a href="/product/contact/" class="active" aria-current="page"
+            >Contact</a
+          >
+        </li>
+        <li><a href="/profile/">Profile</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section class="contact-card" aria-labelledby="contactTitle" role="form">
+        <h2 id="contactTitle">Contact Us</h2>
+        <form method="post" id="contactForm">
+          {% csrf_token %}
+          <label for="id_fullname">Full Name</label>
+          {{ form.fullname }}
+          <label for="id_email">Email</label>
+          {{ form.email }}
+          <label for="id_message">Message</label>
+          {{ form.message }}
+          <button type="submit">Submit</button>
+        </form>
+        {% if submitted %}
+        <div class="success-popup" role="alert" aria-live="assertive">
+          ✅ Thank you for contacting us!
+        </div>
+        {% endif %}
+
+        <div class="map-container" aria-label="Map showing nursery location">
+          <iframe
+            title="Rudra Flower Nursery Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3824.668837011804!2d74.0347949755419!3d18.5097708920663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c0919df68f1b%3A0x8e867a5839791ae3!2sRudra%20Flower%20Nursery!5e0!3m2!1sen!2sin!4v1691353527408!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+
+      <div
+        class="success-popup"
+        id="successPopup"
+        role="alert"
+        aria-live="assertive"
+      >
+        Thank you for contacting us!
+      </div>
+    </main>
+  </body>
+</html>

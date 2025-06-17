@@ -7,10 +7,11 @@ from .views import (
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from . import views
 
 urlpatterns = [
     path('', home, name='home'),
-    # path('profile/',profile ,name='profile'),
+    path('profile/',views.profile ,name='profile'),
     # path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('display/', display, name='display'),
     path('display/<int:plant_id>/', SpecificPlant, name='SpecificPlant'),
