@@ -7,3 +7,6 @@ django-allauth-ui
 # django-widgets-tweaks
 dj-database-url
 python-decouple
+django-unfold
+django-import-export[all]
+razorpay

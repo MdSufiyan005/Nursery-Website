@@ -1,146 +1,254 @@
 {% extends "main.html" %}
+{% load static%}
+
+{% block style %}<link rel="stylesheet" href="{% static 'css/specific_plant.css'%}" />{% endblock style %}
+
 
 {% block content %}
-<style>
-body {
-    background-color: #f3fdf5;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-}
+  <input type="hidden" id="cart-data" value="{{ request.session.cart|jsonify }}">
 
-.detail-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 900px;
-    margin: 60px auto;
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
+  {% include 'home/navbar.html' %}
 
-.image-side {
-    flex: 1 1 300px;
-    background-color: #e8f5e9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
 
-.image-side img {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 12px;
-    object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.3s;
-}
-
-.image-side img:hover {
-    transform: scale(1.03);
-}
-
-.info-side {
-    flex: 2 1 400px;
-    padding: 30px 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: #2e7d32;
-}
-
-.info-side h2 {
-    font-size: 28px;
-    margin-bottom: 12px;
-    color: #1b5e20;
-}
-
-.info-side .category,
-.info-side .price {
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-
-.info-side .description {
-    margin-top: 18px;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #33691e;
-    white-space: pre-line;
-}
-
-.purchase-button {
-    margin-top: 25px;
-    align-self: flex-start;
-    padding: 12px 24px;
-    background-color: #43a047;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    text-decoration: none;
-}
-
-.purchase-button:hover {
-    background-color: #2e7d32;
-    transform: scale(1.05);
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .detail-wrapper {
-        flex-direction: column;
-        margin: 40px 20px;
-    }
-
-    .image-side, .info-side {
-        flex: 1 1 100%;
-        padding: 20px;
-    }
-
-    .info-side h2 {
-        font-size: 24px;
-    }
-
-    .info-side .category,
-    .info-side .price {
-        font-size: 16px;
-    }
-
-    .info-side .description {
-        font-size: 14px;
-    }
-
-    .purchase-button {
-        width: 100%;
-        text-align: center;
-        padding: 10px;
-        font-size: 15px;
-    }
-}
-</style>
-
-<div class="detail-wrapper">
+  <div class="detail-wrapper">
     <div class="image-side">
-        <img src="{{ plant.image.url }}" alt="{{ plant.name }}">
+      <img src="{{ plant.image.url }}" alt="{{ plant.name }}">
+      {% if plant.Quantity == 0 %}
+        <div class="out-of-stock-badge">Out of Stock</div>
+      {% endif %}
     </div>
+
     <div class="info-side">
-        <h2>🌿 {{ plant.name }}</h2>
-        <div class="category">📂 <strong>Category:</strong> {{ plant.Category }}</div>
-        <div class="price">💰 <strong>Price:</strong> ₹{{ plant.price }}</div>
-
-        <div class="description">
-            📝 <strong>Description:</strong><br>
-            {{ plant.Desciption }}
-        </div>
-
-        <a href="#" class="purchase-button">🛒 Purchase</a>
+      <h2>🌿 {{ plant.name }}</h2>
+      <div class="category">📂 <strong>Category:</strong> {{ plant.Category }}</div>
+      <div class="price">💰 <strong>Price:</strong> ₹{{ plant.price }}</div>
+      <div class="stock-status">
+        📦 <strong>Availability:</strong> 
+        {% if plant.Quantity > 0 %}
+          <span class="in-stock">In Stock ({{ plant.Quantity }} available)</span>
+        {% else %}
+          <span class="out-of-stock">Out of Stock</span>
+        {% endif %}
+      </div>
+      <div class="description">
+        📝 <strong>Description:</strong><br>
+        {{ plant.Desciption }}
+      </div>
+      {% if plant.Quantity > 0 %}
+        <button class="purchase-button js-add-cart" 
+          data-url="{% url 'add_to_cart' plant.id %}" 
+          data-plant-id="{{ plant.id }}"
+          data-auth="{{ user.is_authenticated|lower }}"
+          data-login-url="{% url 'account_login' %}">
+          🛒 Add to Cart
+        </button>
+      {% else %}
+        <button class="purchase-button out-of-stock-button" disabled>
+          ❌ Out of Stock
+        </button>
+      {% endif %}
     </div>
-</div>
 
+    <div class="similar-plants">
+      <h3>🌱 Similar Plants</h3>
+      <div class="similar-grid">
+        {% for similar in similar_plants %}
+          <div class="similar-card">
+            <div class="image-container">
+              <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="home-image">
+            </div>
+            <div class="text-container">
+              <h4>{{ similar.name }}</h4>
+              <p>{{ similar.Category }} | ₹{{ similar.price }}</p>
+            </div>
+            <a href="{% url 'SpecificPlant' similar.id %}" class="purchase-button">
+              Look at it
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.js-add-cart');
+    
+    buttons.forEach(btn => {
+        const plantId = btn.dataset.plantId;
+        const isAuthenticated = btn.dataset.auth === 'true';
+        const loginUrl = btn.dataset.loginUrl;
+
+        // Check if item is in cart and update button state
+        if (isAuthenticated && isInCart(plantId)) {
+            updateButtonToAdded(btn);
+        }
+
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            // Check authentication first
+            if (!isAuthenticated) {
+                // Show login popup
+                showLoginModal(loginUrl);
+                return;
+            }
+
+            const url = btn.dataset.url;
+            
+            try {
+                if (btn.classList.contains('added')) {
+                    // Remove from cart if already added
+                    const response = await fetch(`/remove-from-cart/${plantId}/`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        updateButtonToAdd(btn);
+                        updateCartCount(data.cart_count);
+                    }
+                } else {
+                    // Add to cart if not added
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        updateButtonToAdded(btn);
+                        updateCartCount(data.cart_count);
+                    }
+                }
+            } catch (err) {
+                console.error('Cart operation failed:', err);
+            }
+        });
+    });
+
+    function showLoginModal(loginUrl) {
+        // Create modal element
+        const modal = document.createElement('div');
+        modal.className = 'login-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h3>Please Login</h3>
+                <p>You need to be logged in to add items to cart.</p>
+                <div class="modal-buttons">
+                    <a href="${loginUrl}" class="login-btn">Login</a>
+                    <button class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        `;
+
+        // Add modal styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .login-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease-out;
+            }
+            
+            .modal-content {
+                background: white;
+                padding: 2rem;
+                border-radius: 12px;
+                text-align: center;
+                max-width: 90%;
+                width: 400px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideUp 0.3s ease-out;
+            }
+            
+            .modal-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+            
+            .login-btn {
+                background: #256029;
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: background 0.3s;
+            }
+            
+            .login-btn:hover {
+                background: #43a047;
+            }
+            
+            .cancel-btn {
+                padding: 0.75rem 1.5rem;
+                border: 2px solid #ddd;
+                background: white;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            
+            .cancel-btn:hover {
+                background: #f5f5f5;
+                border-color: #ccc;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            @keyframes slideUp {
+                from { transform: translateY(20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+
+        document.head.appendChild(style);
+        document.body.appendChild(modal);
+
+        // Handle cancel button click
+        const cancelBtn = modal.querySelector('.cancel-btn');
+        cancelBtn.addEventListener('click', () => {
+            modal.remove();
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+
+    function updateButtonToAdded(btn) {
+        btn.textContent = '✅ Added to Cart';
+        btn.classList.add('added');
+    }
+
+    function updateButtonToAdd(btn) {
+        btn.textContent = '🛒 Add to Cart';
+        btn.classList.remove('added');
+    }
+
+    function updateCartCount(count) {
+        const badge = document.getElementById('cart-count');
+        if (badge) badge.textContent = count;
+    }
+
+    function isInCart(plantId) {
+        // You'll need to pass the cart data from Django to check this
+        const cartData = JSON.parse(document.getElementById('cart-data').value || '{}');
+        return plantId in cartData;
+    }
+});
+</script>
 {% endblock content %}

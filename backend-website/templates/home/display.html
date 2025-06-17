@@ -1,5 +1,5 @@
 {% extends "main.html" %}
-
+{% load static%}
 {% block content %}
 <style>
 /* Global Reset */
@@ -345,6 +345,12 @@ p[style*="text-align:center"] {
 }    
 </style>
 
+{% block style %}<link rel="stylesheet" href="{% static 'css/display.css'%}" />{% endblock style %}
+
+{% block content %}
+{% include 'home/navbar.html' %}
+
+
 <h1 style="text-align:center; margin-top: 30px;">Search Plants</h1>
 
 <!-- Search Input -->
@@ -413,7 +419,7 @@ p[style*="text-align:center"] {
             <h1>{{ plant.name }}</h1>
             <p>{{ plant.Category }} | ₹{{ plant.price }} | {{ plant.Quantity }} in stock</p>
         </div>
-        <a href="{% url 'SpecificPlant' plant.id %}" class="purchase-button">🛒 Purchase</a>
+        <a href="{% url 'SpecificPlant' plant.id %}" class="purchase-button">Look at it</a>
     </div>
     {% endfor %}
 </div>

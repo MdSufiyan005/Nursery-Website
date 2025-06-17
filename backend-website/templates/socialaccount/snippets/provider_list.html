@@ -1,0 +1,75 @@
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+{% if provider.id == "google" %}
+<a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+   class="google-signin-button">
+    <div class="google-icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+        </svg>
+    </div>
+    <span>Continue with Google</span>
+</a>
+{% endif %}
+{% endfor %}
+
+<style>
+.google-signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    background-color: white;
+    color: #757575;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.google-signin-button:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+}
+
+.google-signin-button:active {
+    background-color: #f1f3f4;
+    transform: translateY(0);
+}
+
+.google-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.google-icon path {
+    fill: #4285f4;
+}
+
+@media (max-width: 480px) {
+    .google-signin-button {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+    
+    .google-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+</style>

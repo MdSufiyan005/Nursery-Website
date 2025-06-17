@@ -1,0 +1,166 @@
+{% extends "main.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="logout-box">
+        <div class="logout-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24">
+                <path fill="#256029" d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/>
+            </svg>
+        </div>
+        
+        <h1>{% trans "Sign Out" %}</h1>
+        <p class="logout-message">{% trans "Are you sure you want to sign out?" %}</p>
+
+        <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            
+            <div class="button-group">
+                <button type="submit" class="submit-btn logout-btn">
+                    {% trans "Yes, Sign Out" %}
+                </button>
+                <a href="{% url 'display' %}" class="btn-cancel">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+:root {
+    --primary: #256029;
+    --accent: #7ecf7e;
+    --gray: #ccc;
+    --radius: 20px;
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(120deg, #eaf4ed, #cfe9da);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    width: 360px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    animation: zoomFade 0.5s ease-in-out;
+    transition: transform 0.4s ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.logout-box {
+    text-align: center;
+}
+
+.logout-icon {
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+h1 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.logout-message {
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.submit-btn.logout-btn {
+    background: #ff5252;
+    color: white;
+    padding: 0.9rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 10px rgba(255, 82, 82, 0.2);
+    transition: all 0.3s ease;
+}
+
+.submit-btn.logout-btn:hover {
+    background: #d32f2f;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background: #fff;
+    color: #666;
+    padding: 0.9rem 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+    transform: translateY(-2px);
+}
+
+@keyframes zoomFade {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 1.5rem;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .submit-btn.logout-btn,
+    .btn-cancel {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

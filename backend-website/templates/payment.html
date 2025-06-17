@@ -1,0 +1,62 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/payment.css' %}">
+{% endblock style %}
+
+{% block content %}
+<div class="payment-overlay">
+    <div class="payment-container">
+        <div class="payment-header">
+            <h2>Complete Your Purchase</h2>
+            <p>You're about to pay ₹{{ order.amount }}</p>
+        </div>
+
+        <div class="payment-loader">
+            <div class="spinner"></div>
+            <p>Initializing secure payment...</p>
+        </div>
+    </div>
+</div>
+
+<form method="POST" id="razorpay-form">
+    {% csrf_token %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                key: "{{ razorpay_key }}",
+                name: "Nursery Plants",
+                description: "Plant Purchase",
+                order_id: "{{ order.provider_order_id }}",
+                amount: parseInt("{{ order.amount }}" * 100),  // Convert to paise
+                currency: "INR",
+                handler: function(response) {
+                    window.location.href = "{{ callback_url }}?" +
+                        "razorpay_payment_id=" + response.razorpay_payment_id +
+                        "&razorpay_order_id=" + response.razorpay_order_id +
+                        "&razorpay_signature=" + response.razorpay_signature;
+                },
+                modal: {
+                    ondismiss: function() {
+                        window.location.href = "{% url 'cart_view' %}";
+                    }
+                },
+                theme: {
+                    color: "#43a047"
+                }
+            };
+
+            try {
+                var rzp = new Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                console.error("Razorpay initialization error:", error);
+                alert("Payment initialization failed. Please try again.");
+                window.location.href = "{% url 'cart_view' %}";
+            }
+        });
+    </script>
+</form>
+{% endblock %}

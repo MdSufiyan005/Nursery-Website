@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,6 +53,7 @@
     <main>
         <div class="container">
             {% block content %}
+            <h1/>hiiii </h1>
             {% endblock %}
         </div>
     </main>
@@ -60,4 +61,4 @@
         &copy; {{ year|default:2025 }} My Django App. All rights reserved.
     </footer>
 </body>
-</html>
+</html> {% endcomment %}

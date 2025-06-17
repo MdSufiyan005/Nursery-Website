@@ -14,9 +14,10 @@ from pathlib import Path
 
 import os
 from dotenv import load_dotenv
-from urllib.parse import urlparse
-
 load_dotenv()
+from urllib.parse import urlparse
+from decouple import config
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +39,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.import_export",
+    "unfold.contrib.filters",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,6 +59,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     "widget_tweaks",
     "slippers",
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +78,12 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'templates' / 'socialaccount',
+            BASE_DIR / 'templates' / 'socialaccount' / 'providers',
+            BASE_DIR / 'templates' / 'socialaccount' / 'providers' / 'google',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,8 +148,8 @@ SOCIALACCOUNT_PROVIDERS = {
         # credentials, or list them here:
         "APPS": [
             {
-                "client_id": os.environ.get("CLIENT_ID"),
-                "secret": os.environ.get("SECRET_KEY"),
+                "client_id": config("CLIENT_ID"),
+                "secret": config("SECRET_KEY"),
                 "key": "",
                 "settings": {
                     # You can fine tune these settings per app:
@@ -158,18 +168,27 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+
+# Razor pay Cred
+RAZORPAY_KEY_ID = config("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET")
+
+
 # Django allauth config
 
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
+AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-
-    # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
+)
 
-]
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Use app password for Gmail
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default sender email
 
 ACCOUNT_LOGIN_METHODS = {'username','email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
@@ -186,18 +205,19 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = '[CFE]'
 LANGUAGE_CODE = 'en-us'
 
 
-TIME_ZONE = 'UTC'
-
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 
+USE_L10N = True
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [ BASE_DIR / 'static',]
 
 
 MEDIA_URL = '/media/'
@@ -208,3 +228,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+UNFOLD = {
+    "SITE_HEADER" :"Rudra Nursery Admin",
+    
+}
+
+# Session settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 24 hours in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Login settings
+LOGIN_URL = 'account_login'  # for django-allauth
+LOGIN_REDIRECT_URL = 'display'
+LOGOUT_REDIRECT_URL = 'home'

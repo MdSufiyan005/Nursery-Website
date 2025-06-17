@@ -1,26 +1,126 @@
+{% load static%}
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Django App{% endblock %}</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" rel="stylesheet">
 
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌿 Rudra Nursery</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    />
+    {% block style %}<link rel="stylesheet" href="{% static 'css/home_page.css'%}" />{% endblock style %}
+    </head>
+  <body>
     {% include "navbar.html" %}
     {% block content %}
-    
-    {% if user.is_authenticated %}
-    <h1>Welcome {{ user.username }}!</h1>
+    {% comment %} @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); {% endcomment %}
 
-    {% else %}
-    
-    <h1>Kindly login to access your profile.</h1>
-    
-    {% endif %}
+    <nav>
+      <div class="logo">Rudra Nursery</div>
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links">
+        {% comment %}
+        <li><a href="/product/home/">Home</a></li>
+        <li><a href="/product/catlog/">Catalog</a></li>
+        <li><a href="/product/shop/">Shop</a></li>
+        <li><a href="/product/contact/">Contact</a></li>
+        {% endcomment %}
+        <li><a href="/accounts/login/">Login</a></li>
+      </ul>
+    </nav>
+    <div class="blur-overlay"></div>
+    <section class="hero">
+      <div class="hero">
+        <div class="hero">
+          <div class="hero-content">
+            <h1>
+              <span class="highlight">Grow</span> your space with
+              <span class="underline">nature's touch</span>
+            </h1>
+            <p>
+              Explore our premium nursery collection and bring life into your
+              home, office, or garden.
+            </p>
+            <a href="display/" class="shop-now-btn">🛒 Shop Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="categories">
+      <h2>Popular Categories</h2>
+      <div class="category-cards" id="categoryContainer"></div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">What types of plants do you offer?</div>
+          <div class="faq-answer">
+            We offer a wide variety of indoor, outdoor, flowering,
+            air-purifying, and low-maintenance plants suited for homes and
+            offices.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Can I get guidance on how to take care of my plant?
+          </div>
+          <div class="faq-answer">
+            Absolutely! Each plant comes with a care guide, and you can also
+            access detailed tips in our blog or via our support.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Do you accept returns or offer replacements?
+          </div>
+          <div class="faq-answer">
+            Yes, if your plant arrives damaged or unhealthy, we offer easy
+            replacements or refunds within 3 days of delivery.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Do you offer pots and accessories too?</div>
+          <div class="faq-answer">
+            Yes, we have a curated collection of stylish pots, soil, and other
+            gardening essentials available.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-nursery">
+      <div class="contact">
+        <h3>Contact Us</h3>
+        <p>📞 +91 98765 43210</p>
+        <p>✉️ support@rudranursery.in</p>
+      </div>
+      <div class="nursery-info">
+        <h3>About Rudra Nursery</h3>
+        <p>
+          We bring nature to your doorstep with a wide variety of flowering
+          plants, herbs, and bonsai trees.
+        </p>
+        <address>
+          🌍 21 Green Valley Road,<br />
+          Pune, Maharashtra, India<br />
+          Open: 9AM – 7PM (All Days)
+        </address>
+      </div>
+    </section>
     {% endblock content %}
-
+   {% block script %}
+   <script src="{% static 'js/home_page.js' %}"></script>
+    {% endblock script %}
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
 </html>
+
