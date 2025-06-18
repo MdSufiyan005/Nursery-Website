@@ -7,8 +7,10 @@ from .views import (
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+
 from . import views
 from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path('', home, name='home'),
@@ -26,4 +28,5 @@ urlpatterns = [
     path('shipping/', shipping_details, name='shipping_details'),
     path('payment/', order_payment, name='order_payment'),
     path('order/callback/', callback, name='payment_callback'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

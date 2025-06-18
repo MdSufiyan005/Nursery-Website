@@ -19,6 +19,7 @@
 
   <form method="post" class="form active" id="loginForm">
     {% csrf_token %}
+
     {% if form.errors %}
     <div class="error-message">
       Invalid username or password.
@@ -59,6 +60,7 @@
       >
     </div>
 
+
     <button type="submit" class="submit-btn">Login</button>
 
     <div class="or-separator">
@@ -66,11 +68,9 @@
     </div>
 
     <a href="{% provider_login_url 'google' %}" class="btn-google">
-      <img
-        src="{% static 'img/google-logo.png' %}"
-        class="google-logo"
-        alt="Google"
-      />
+
+      <img src="{% static 'img/google-logo.png' %}" class="google-logo" alt="Google"/>
+
       Sign in with Google
     </a>
   </form>

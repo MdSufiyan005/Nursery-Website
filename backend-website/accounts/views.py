@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.contrib import messages  # Add this import
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from data.models import Plant, Order, OrderItem
@@ -13,9 +13,7 @@ from .forms import ShippingDetailsForm
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.template.defaultfilters import register
-import os
-from django.http import JsonResponse
-from django.db.models import Min, Max
+import os 
 
 @login_required
 def profile(request):
@@ -34,48 +32,8 @@ def home(request):
 
 
 def display(request):
-    query = request.GET.get('q', '')
-    category = request.GET.get('category', '')
-    min_price = request.GET.get('min_price', '')
-    max_price = request.GET.get('max_price', '')
-    sort = request.GET.get('sort', '')
-
     plants = Plant.objects.all()
-
-    real_min_price = Plant.objects.aggregate(Min('price'))['price__min'] or 0
-    real_max_price = Plant.objects.aggregate(Max('price'))['price__max'] or 1000
-
-    if query:
-        plants = plants.filter(name__icontains=query)
-
-    if category:
-        plants = plants.filter(Category__iexact=category)
-
-    if min_price:
-        plants = plants.filter(price__gte=min_price)
-
-    if max_price:
-        plants = plants.filter(price__lte=max_price)
-    
-    if sort == 'price_low':
-        plants = plants.order_by('price')
-    elif sort == 'price_high':
-        plants = plants.order_by('-price')
-
-    print("Filters applied:")
-    print(f"Query: {query}, Category: {category}, Min: {min_price}, Max: {max_price}")
-    print("Results:", plants)
-
-    return render(request, 'home/display.html', {
-        'plants': plants,
-        'query': query,
-        'selected_category': category,
-        'min_price': min_price,
-        'max_price': max_price,
-        'selected_sort': sort,
-        'real_min_price': real_min_price,
-        'real_max_price': real_max_price
-    })
+    return render(request,'home/display.html', {'plants': plants})
 
 @register.filter(name='jsonify')
 def jsonify(value):
@@ -317,19 +275,6 @@ def order_payment(request):
         return redirect('cart_view')
 
 @login_required
-def search_suggestions(request):
-    query = request.GET.get('q', '')
-    results = []
-
-    if query:
-        print("AJAX called with query:", query)
-        products = Plant.objects.filter(name__icontains=query)[:5] # No. of suggetions
-        results = [p.name for p in products]
-        print("Results:", results)
-
-    return JsonResponse({'results': results})
- 
-@login_required
 @csrf_exempt
 def callback(request):
     payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id", "")
@@ -351,6 +296,7 @@ def callback(request):
             'razorpay_order_id': order_id,
             'razorpay_signature': signature
         }
+
         try:
             client.utility.verify_payment_signature(params_dict)
             order.payment_id = payment_id

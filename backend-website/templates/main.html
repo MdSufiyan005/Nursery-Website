@@ -3,12 +3,10 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🌿 Rudra Nursery</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
@@ -16,7 +14,6 @@
     {% block style %}<link rel="stylesheet" href="{% static 'css/home_page.css'%}" />{% endblock style %}
     </head>
   <body>
-    {% include "navbar.html" %}
     {% block content %}
     {% comment %} @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); {% endcomment %}
 
@@ -121,6 +118,4 @@
    <script src="{% static 'js/home_page.js' %}"></script>
     {% endblock script %}
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
 </html>
-

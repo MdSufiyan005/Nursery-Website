@@ -33,8 +33,8 @@ SECRET_KEY = 'django-insecure-^sneugcevffblx-@om3#2b^94yvqb@g&(x$s_dfq1&br@#l#!i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ['.github.dev', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -48,9 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'data',
-    'accounts',
-
+    'django.contrib.sites',
     # Third party apps
     "allauth_ui",
     'allauth',
@@ -60,6 +58,8 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "slippers",
     'import_export',
+    'data',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -140,6 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 SOCIALACCOUNT_PROVIDERS = {
     
     "google": {
@@ -175,11 +176,13 @@ RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET")
 
 
 # Django allauth config
+SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -190,11 +193,28 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Use app password for Gmail
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default sender email
 
-ACCOUNT_LOGIN_METHODS = {'username','email'}
+
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Use app password for Gmail
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Default sender email
+
+ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[CFE]'
+
 # SOCIALACCOUNT_PROVIDERS = {}
+
 
 
 # Internationalization
