@@ -33,8 +33,8 @@ SECRET_KEY = 'django-insecure-^sneugcevffblx-@om3#2b^94yvqb@g&(x$s_dfq1&br@#l#!i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ['.github.dev', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -47,11 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
     'django.contrib.staticfiles',
-    'data',
-    'accounts',
     'product',
+
+    'django.contrib.sites',
 
     # Third party apps
     "allauth_ui",
@@ -62,6 +61,8 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "slippers",
     'import_export',
+    'data',
+    'accounts',
 ]
 
 MIDDLEWARE = [

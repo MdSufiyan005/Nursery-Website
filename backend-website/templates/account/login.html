@@ -46,43 +46,29 @@
         </a>
       </form>
 
-      <form method="post" class="form" id="signupForm">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="new_username">Username</label>
-          <input
-            type="text"
-            name="new_username"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="new_email">Email</label>
-          <input type="email" name="new_email" class="form-control" required />
-        </div>
-        <div class="form-group">
-          <label for="new_password">Password</label>
-          <input
-            type="password"
-            name="new_password"
-            class="form-control"
-            required
-          />
-        </div>
-        <button type="submit" class="submit-btn">Signup</button>
-        <div class="or-separator">Or</div>
-        <a href="{% provider_login_url 'google' %}" class="btn-google">
-          <img
-            src="{% static 'img/google-logo.svg' %}"
-            class="google-logo"
-            alt="Google"
-          />
-          Sign in with Google
-        </a>
-      </form>
+
+{% block content %}
+<div class="container">
+  <div class="form-toggle">
+    <button class="toggle-btn active">Login</button>
+    <a href="{% url 'account_signup' %}" class="toggle-btn">Sign Up</a>
+  </div>
+
+  <form method="post" class="form active" id="loginForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="submit-btn">Login</button>
+
+    <div class="or-separator">
+      <span>or continue with</span>
     </div>
 
-    <script src="{% static 'js/login.js' %}"></script>
-  </body>
-</html>
+    <a href="{% provider_login_url 'google' %}" class="btn-google">
+      <img src="{% static 'img/google-logo.png' %}" class="google-logo" alt="Google"/>
+      Sign in with Google
+    </a>
+  </form>
+</div>
+{% endblock %}
+

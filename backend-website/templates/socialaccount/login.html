@@ -34,28 +34,11 @@ head_title %} {% block content %}
       endblocktrans %}
     </h1>
 
-    <p class="description">
-      {% blocktrans with provider=provider.name %} You are about to sign in
-      using your {{ provider }} account. {% endblocktrans %}
-    </p>
-    {% endif %}
 
-    <form method="post" class="social-login-form">
-      {% csrf_token %}
-      <button type="submit" class="continue-button">
-        {% trans "Continue" %}
-        <svg viewBox="0 0 24 24" width="16" height="16">
-          <path
-            fill="currentColor"
-            d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
-          />
-        </svg>
-      </button>
-    </form>
-
-    <a href="{% url 'account_login' %}" class="back-link">
-      {% trans "Back to Login" %}
-    </a>
-  </div>
+        <a href="{% url 'account_login' %}" class="back-link">
+            {% trans "Back to Login" %}
+        </a>
+    </div>
 </div>
+ 
 {% endblock content %}
