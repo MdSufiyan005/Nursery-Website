@@ -3,12 +3,8 @@ from django.contrib.admin import register
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from import_export.admin import ImportExportModelAdmin
-from unfold.admin import ModelAdmin  # <-- using Unfold's ModelAdmin
-from unfold.contrib.import_export.forms import (ExportForm, ImportForm)
-from unfold.forms import (AdminPasswordChangeForm, UserChangeForm,
-                          UserCreationForm)
-from unfold.admin import ModelAdmin
-from unfold.contrib.filters.admin import RangeDateFilter
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AdminPasswordChangeForm
+from import_export.forms import ExportForm, ImportForm
 
 from .models import Plant, User_details,Order, OrderItem,ContactMessage,UserShippingDetails
 
@@ -22,13 +18,13 @@ admin.site.register(UserShippingDetails)
 admin.site.unregister(User) # Unregister the default User model to customize it
 # admin.site.register(Order) # Register the Order model
 @register(User)
-class UserAdmin(BaseUserAdmin,ModelAdmin):
+class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
 
 @admin.register(Plant)
-class PlantAdmin(ModelAdmin,ImportExportModelAdmin):
+class PlantAdmin(ImportExportModelAdmin):
     list_display = ('name', 'Category', 'price', 'Quantity', 'created_at')
     list_filter = ('Category',)
     search_fields = ('name', 'Category', 'Desciption')
@@ -49,11 +45,9 @@ class PlantAdmin(ModelAdmin,ImportExportModelAdmin):
     import_form_class = ImportForm
     export_form_class = ExportForm
     list_filter_submit = True 
-    list_filter = ['Category',
-                   ("created_at", RangeDateFilter)]
 
 @admin.register(User_details)
-class UserAdmin(ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = ('user_name', 'email', 'Phone_number')
     search_fields = ('user_name', 'email')
 
@@ -64,9 +58,9 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 @admin.register(Order)
-class OrderAdmin(ModelAdmin):
+class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'amount', 'status', 'created_at')
-    list_filter = ('status', ('created_at', RangeDateFilter))
+    list_filter = ('status',) 
     search_fields = ('id', 'name', 'provider_order_id', 'payment_id')
     readonly_fields = ('id', 'provider_order_id', 'payment_id', 'signature_id', 'amount')
     inlines = [OrderItemInline]

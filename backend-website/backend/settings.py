@@ -40,8 +40,8 @@ ALLOWED_HOSTS = ['.github.dev', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     "unfold",
-    "unfold.contrib.import_export",
-    "unfold.contrib.filters",
+    # "unfold.contrib.import_export",  # Removed because module not found
+    # "unfold.contrib.filters",        # Removed because module not found
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # Third party apps
-    "allauth_ui",
+    # "allauth_ui",  # Removed because module not found
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

@@ -15,7 +15,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.template.defaultfilters import register
 import os 
 from data.forms import ContactMessageForm
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Q
 
 @login_required
 def profile(request):
@@ -25,7 +25,39 @@ def profile(request):
 
     
 def home(request):
-    return render(request, 'main.html', {})
+    query = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    sort = request.GET.get('sort', '')
+
+    prices = Plant.objects.aggregate(real_min_price=Min('price'), real_max_price=Max('price'))
+    plants = Plant.objects.all()
+
+    if query:
+        plants = plants.filter(name__icontains=query)
+    if category:
+        plants = plants.filter(Category=category)
+    if min_price:
+        plants = plants.filter(price__gte=min_price)
+    if max_price:
+        plants = plants.filter(price__lte=max_price)
+    if sort == 'price_low':
+        plants = plants.order_by('price')
+    elif sort == 'price_high':
+        plants = plants.order_by('-price')
+
+    context = {
+        'plants': plants,
+        'real_min_price': prices['real_min_price'] or 0,
+        'real_max_price': prices['real_max_price'] or 1000,
+        'min_price': min_price or prices['real_min_price'] or 0,
+        'max_price': max_price or prices['real_max_price'] or 1000,
+        'query': query,
+        'selected_category': category,
+        'selected_sort': sort,
+    }
+    return render(request, 'main.html', context)
 
 
 # def display(request):

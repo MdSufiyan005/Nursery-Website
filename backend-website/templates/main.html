@@ -11,41 +11,30 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
     />
-    {% block style %}<link rel="stylesheet" href="{% static 'css/home_page.css'%}" />{% endblock style %}
-    </head>
+    <link rel="stylesheet" href="{% static 'css/home_page.css'%}" />
+    <link rel="stylesheet" href="{% static 'css/display.css'%}" />
+  </head>
   <body>
-    {% block content %}
-    {% comment %} @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); {% endcomment %}
-
     <nav>
       <div class="logo">Rudra Nursery</div>
       <button class="menu-toggle" onclick="toggleMenu()">☰</button>
       <ul class="nav-links">
-        {% comment %}
-        <li><a href="/product/home/">Home</a></li>
-        <li><a href="/product/catlog/">Catalog</a></li>
-        <li><a href="/product/shop/">Shop</a></li>
-        <li><a href="/product/contact/">Contact</a></li>
-        {% endcomment %}
         <li><a href="/accounts/login/">Login</a></li>
+        <li><a href="/accounts/signup/">Sign Up</a></li>
       </ul>
     </nav>
     <div class="blur-overlay"></div>
     <section class="hero">
-      <div class="hero">
-        <div class="hero">
-          <div class="hero-content">
-            <h1>
-              <span class="highlight">Grow</span> your space with
-              <span class="underline">nature's touch</span>
-            </h1>
-            <p>
-              Explore our premium nursery collection and bring life into your
-              home, office, or garden.
-            </p>
-            <a href="display/" class="shop-now-btn">🛒 Shop Now</a>
-          </div>
-        </div>
+      <div class="hero-content">
+        <h1>
+          <span class="highlight">Grow</span> your space with
+          <span class="underline">nature's touch</span>
+        </h1>
+        <p>
+          Explore our premium nursery collection and bring life into your
+          home, office, or garden.
+        </p>
+        <a href="#shop-section" class="shop-now-btn">🛒 Shop Now</a>
       </div>
     </section>
 
@@ -54,6 +43,89 @@
       <div class="category-cards" id="categoryContainer"></div>
     </section>
 
+    <!-- Integrated Browsing/Shopping Section -->
+    <section id="shop-section" class="display-container">
+      <h1 class="display-title">Search Plants</h1>
+      <form id="searchForm" action="{% url 'home' %}#shop-section" method="get">
+        <input
+          type="text"
+          id="search"
+          name="q"
+          autocomplete="off"
+          placeholder="Search for Plants"
+          value="{{ query }}"
+        />
+        <div id="suggestions"></div>
+      </form>
+      <div id="filterSection">
+        <form method="get" id="filterForm" action="#shop-section">
+          <div class="filter-controls">
+            <select name="category" id="categorySelect" class="filter-select">
+              <option value="">All Categories</option>
+              <option value="Indoor" {% if selected_category == 'Indoor' %}selected{% endif %}>Indoor</option>
+              <option value="Outdoor" {% if selected_category == 'Outdoor' %}selected{% endif %}>Outdoor</option>
+              <option value="Tree" {% if selected_category == 'Tree' %}selected{% endif %}>Tree</option>
+            </select>
+            <select name="sort" id="sortSelect" class="filter-select">
+              <option value="">Sort by</option>
+              <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+              <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+            <input type="hidden" name="min_price" id="min_price_input" />
+            <input type="hidden" name="max_price" id="max_price_input" />
+            <div class="price-range-container">
+              <button type="button" id="priceToggleBtn" class="dropdown-btn">Price Range ▼</button>
+              <div id="priceDropdown" class="dropdown-content">
+                <div id="price-slider"></div>
+                <p class="price-range-text">
+                  ₹<span id="min_price_display">{{ min_price|default:real_min_price }}</span>
+                  - ₹<span id="max_price_display">{{ max_price|default:real_max_price }}</span>
+                </p>
+                <button type="submit" class="apply-btn">Apply</button>
+              </div>
+            </div>
+            {% if selected_category or selected_sort or min_price or max_price %}
+              <a href="{% url 'display' %}" class="btn-reset">Reset Filters</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+      {% if plants %}
+      <div class="card-grid">
+        {% for plant in plants %}
+        <div class="card">
+          <div class="card-badges">
+            {% if plant.Quantity < 5 %}
+              <span class="badge low-stock">Low Stock</span>
+            {% endif %}
+            {% if plant.is_new %}
+              <span class="badge new">New</span>
+            {% endif %}
+          </div>
+          <div class="image-container">
+            <img src="{{ plant.image.url }}" alt="{{ plant.name }}" class="plant-image">
+            <div class="image-overlay">
+              <a href="{% url 'SpecificPlant' plant.id %}" class="quick-view">Quick View</a>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="content-header">
+              <h2 class="plant-name">{{ plant.name }}</h2>
+              <span class="plant-category">{{ plant.Category }}</span>
+            </div>
+            <div class="price">₹{{ plant.price }}</div>
+            <div class="card-actions">
+              <a href="{% url 'SpecificPlant' plant.id %}" class="view-btn">View</a>
+              <a href="{% url 'add_to_cart' plant.id %}" class="add-cart-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="text-align:center; color: #888;">No plants found matching your criteria.</p>
+      {% endif %}
+    </section>
     <!-- FAQ Section -->
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
@@ -113,10 +185,7 @@
         </address>
       </div>
     </section>
-    {% endblock content %}
-    
-   {% block script %}
-   <script src="{% static 'js/home_page.js' %}"></script>
-    {% endblock script %}
-</body>
+    <script src="{% static 'js/home_page.js' %}"></script>
+    <script src="{% static 'js/display.js' %}"></script>
+  </body>
 </html>
