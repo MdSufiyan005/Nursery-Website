@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import (
     home, display, SpecificPlant, checkout, cart_view,
     add_to_cart, remove_from_cart, update_cart_quantity,
-    order_payment, callback, shipping_details,contact_page,my_orders,auth_combined_view,profile_view
+    order_payment, callback, shipping_details,contact_page,my_orders,auth_combined_view,profile_view,search_suggestions
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -26,5 +26,6 @@ urlpatterns = [
     path('order/callback/', callback, name='payment_callback'),
     path('contact/',contact_page,name='contact_page'),
     path('my-orders/', my_orders, name='myorders'),
+    path('ajax/suggestions/', search_suggestions, name='search_suggestions'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

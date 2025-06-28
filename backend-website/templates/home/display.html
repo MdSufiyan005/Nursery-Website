@@ -113,6 +113,7 @@
     </div>
     {% endif %}
 </div>
+{{ plant_names|json_script:"plant-names" }}
 {% block script %}
 <script src="{% static 'js/display.js' %}"></script>
 <script src="{% static 'js/custom-dropdown.js' %}"></script>

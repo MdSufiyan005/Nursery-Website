@@ -72,6 +72,8 @@ def display(request):
 
     plants = Plant.objects.all()
 
+    plant_names = list(plants.values_list('name', flat=True))
+
     real_min_price = Plant.objects.aggregate(Min('price'))['price__min'] or 0
     real_max_price = Plant.objects.aggregate(Max('price'))['price__max'] or 1000
 
@@ -98,6 +100,7 @@ def display(request):
 
     return render(request, 'home/display.html', {
         'plants': plants,
+        'plant_names': plant_names,
         'query': query,
         'selected_category': category,
         'min_price': min_price,
@@ -107,7 +110,7 @@ def display(request):
         'real_max_price': real_max_price
     })
 
-@login_required
+
 def search_suggestions(request):
     query = request.GET.get('q', '')
     results = []
