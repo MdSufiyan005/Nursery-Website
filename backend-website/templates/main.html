@@ -1,5 +1,4 @@
 {% load static%}
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,19 +21,16 @@
       <source src="{% static 'videos/landing_video.mp4' %}" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
+    {% if user.is_authenticated %} {% include 'home/navbar.html' %} {% else %}
     <nav>
       <div class="logo">Rudra Nursery</div>
       <button class="menu-toggle" onclick="toggleMenu()">☰</button>
       <ul class="nav-links">
-        {% comment %}
-        <li><a href="/product/home/">Home</a></li>
-        <li><a href="/product/catlog/">Catalog</a></li>
-        <li><a href="/product/shop/">Shop</a></li>
-        <li><a href="/product/contact/">Contact</a></li>
-        {% endcomment %}
         <li><a href="/accounts/login/">Login</a></li>
       </ul>
     </nav>
+    {% endif %}
+
     <div class="blur-overlay"></div>
     <section class="hero">
       <div class="hero">

@@ -45,13 +45,48 @@
 
 #cart-count {
   position: absolute;
-  top: -6px;
-  right: -12px;
+  top: -4px;         /* slightly above the icon */
+  right: -6px;       /* slightly to the right of the icon */
   background-color: #e53935;
   color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 12px;
+  border-radius: 10px; /* compact, not fully round */
+  padding: 0 5px;     /* enough for 1-2 digits, not too wide */
+  font-size: 13px;    /* slightly larger for readability */
+  min-width: 18px;    /* ensures badge doesn't shrink too much */
+  height: 18px;       /* keeps badge height consistent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  pointer-events: none;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+}
+
+/* Ensure cart badge stays close to icon on mobile */
+@media (max-width: 768px) {
+  .cart-icon {
+    position: relative;
+    /* ...existing code... */
+    text-decoration: none;
+    color: #33691e;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    }
+  #cart-count {
+    top: -2px;
+    right: -2px;
+    /* Remove any extra spacing or override if needed */
+    margin: 0;
+    padding: 0px 4px;
+    min-width: 16px;
+    font-size: 12px;
+  }
 }
 
 .login-btn {
@@ -66,6 +101,9 @@
 
 .login-btn:hover {
   background: #388e3c;
+}
+.profile-desktop-dropdown {
+  position: relative;
 }
 
 .dropdown {
@@ -99,33 +137,89 @@
   position: absolute;
   right: 0;
   top: 100%;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  padding: 8px 0;
-  min-width: 150px;
+  background-color: #fff;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  border-radius: 16px;
+  padding: 10px 0;
+  min-width: 160px;
   z-index: 1000;
-  display: none;
-  margin-top: 8px;
+  display: none; /* Hide by default */
+  margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dropdown-menu.show {
-  display: block;
-  animation: dropdownFade 0.2s ease-out;
+  display: flex;
+  animation: dropdownFade 0.25s ease-out;
 }
 
-.dropdown-item {
-  display: block;
-  padding: 8px 16px;
+
+/* .dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  min-width: 100px;
+  margin: 4px 0;
+  padding: 10px 0;
   text-decoration: none;
+  border-radius: 10px;
   color: #2e7d32;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
+  font-size: 15px;
+  font-weight: 500;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+} */
+
+/* .dropdown-item:hover, .dropdown-item:focus {
+  color: #1b5e20;
+  box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+  outline: none;
+  border-radius: 8px;
 }
 
-.dropdown-item:hover {
-  background-color: rgba(46, 125, 50, 0.08);
+.dropdown-item:active {
+  background: #c8e6c9;
+  color: #1b5e20;
+} */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  min-width: 100px;
+  margin: 4px 0;
+  padding: 10px 0;
+  text-decoration: none;
+  border-radius: 10px;
+  color: #2e7d32;
+  font-size: 15px;
+  font-weight: 500;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: #1b5e20;
+  box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+  outline: none;
+  border-radius: 10px;
+}
+
+.dropdown-item:active {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+
 
 @keyframes dropdownFade {
   from {
@@ -166,7 +260,7 @@
   }
   .nav-links {
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 0.5rem; /* reduced gap */
     position: fixed;
     left: 0;
     right: 0;
@@ -192,21 +286,45 @@
     opacity: 1;
   }
   .nav-links li {
-    width: 100%;
+    width: auto; /* was 100% */
     text-align: center;
   }
   .nav-links a, .nav-links .user-menu {
-    font-size: 1.1rem;
-    width: 100%;
-    border-radius: 12px;
-    padding: 0.9rem 0;
-    display: block;
-    margin: 0 auto;
+    width: auto; /* was 90% */
+    border-radius: 8px; /* match PC view */
+    padding: 0.4rem 1rem; /* match PC view, smaller button */
+    margin: 0.1rem 0;
+    display: inline-block;
+    font-size: 1rem;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+  }
+  .nav-links a:hover,
+  .nav-links a:active,
+  .nav-links .user-menu:hover,
+  .nav-links .user-menu:active {
+    background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #1b5e20;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    border-radius: 8px;
   }
   .cart-icon {
     justify-content: center;
-    width: 100%;
-    padding: 0.5rem 0;
+    width: auto;
+    padding: 0.5rem 1rem;
+  }
+  #cart-count {
+    top: -4px;
+    right: -6px;
+    margin: 0;
+    padding: 0 5px;
+    min-width: 18px;
+    height: 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .profile-desktop-dropdown {
     display: none !important;
@@ -273,5 +391,25 @@
     display: block !important;
     width: 100%;
     text-align: center;
+  }
+  .dropdown-item {
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  .dropdown-item:hover,
+  .dropdown-item:active,
+  .dropdown-item:focus {
+    background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #1b5e20;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    outline: none;
+    border-radius: 10px;
+  }
+  .login-btn {
+    transition: background 0.3s, color 0.3s;
+  }
+  .login-btn:hover,
+  .login-btn:active {
+    background: #388e3c;
+    color: #fff;
   }
 }

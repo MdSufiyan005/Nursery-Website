@@ -66,7 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.remove-item').forEach(button => {
         button.addEventListener('click', async (e) => {
-            const plantId = e.target.dataset.plantId;
+            const plantId = e.currentTarget.dataset.plantId;
+            console.log('Clicked remove for plantId:', plantId); // Add this line
             try {
                 const response = await fetch(`/remove-from-cart/${plantId}/`);
                 if (response.ok) {

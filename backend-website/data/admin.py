@@ -9,13 +9,12 @@ from unfold.forms import (AdminPasswordChangeForm, UserChangeForm,
                           UserCreationForm)
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import RangeDateFilter
-from .models import ProfileDetail
-from .models import UserProfile
-from .models import Plant, User_details,Order, OrderItem,ContactMessage
+
+from .models import Plant, User_details,Order, OrderItem,ContactMessage,UserShippingDetails
 
 from django.core.mail import send_mail
 
-# admin.site.register(UserShippingDetails)
+admin.site.register(UserShippingDetails)
 
 # admin.site.register(Plant)
 # admin.site.register(User_details)
@@ -97,19 +96,3 @@ class ContactMessageAdmin(admin.ModelAdmin):
                 self.message_user(request, f"✅ Email sent to {obj.email}", level='success')
 
         super().save_model(request, obj, form, change)
-
-
-
-
-# Register your models here.
-
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'image')
-    search_fields = ('user__username', 'user__email')
-
-admin.site.register(UserProfile, UserProfileAdmin)
-
-@admin.register(ProfileDetail)
-class ProfileDetailAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'contact')
-    search_fields = ('name', 'email')

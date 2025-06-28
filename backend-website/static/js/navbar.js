@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // 🛒 Cart badge update logic
   const updateBadge = count => {
     let badge = document.getElementById('cart-count');
     if (count > 0) {
@@ -37,29 +38,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 👤 User dropdown toggle (desktop)
   function toggleDropdown(event) {
-    // Only allow dropdown on desktop
-    if (window.innerWidth < 769) return;
-    event.preventDefault();
-    const dropdownMenu = document.getElementById('userDropdown');
-    const dropdownArrow = event.currentTarget.querySelector('.dropdown-arrow');
+  if (window.innerWidth < 769) return;
 
-    if (dropdownMenu.style.display === 'none' || !dropdownMenu.style.display) {
-        dropdownMenu.style.display = 'block';
-        dropdownArrow.style.transform = 'rotate(180deg)';
-    } else {
-        dropdownMenu.style.display = 'none';
-        dropdownArrow.style.transform = 'rotate(0)';
-    }
+  event.preventDefault();
+  event.stopPropagation();
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function closeDropdown(e) {
-        if (!e.target.closest('.profile-desktop-dropdown')) {
-            dropdownMenu.style.display = 'none';
-            dropdownArrow.style.transform = 'rotate(0)';
-            document.removeEventListener('click', closeDropdown);
-        }
-    });
+  const dropdownMenu = document.getElementById('userDropdown');
+  const dropdownArrow = event.currentTarget.querySelector('.dropdown-arrow');
+  const isOpen = dropdownMenu.classList.contains('show');
+
+  // Close all dropdowns first
+  document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+  document.querySelectorAll('.dropdown-arrow').forEach(arrow => arrow.style.transform = 'rotate(0deg)');
+
+  // Toggle current dropdown
+  if (!isOpen) {
+    dropdownMenu.classList.add('show');
+    dropdownArrow.style.transform = 'rotate(180deg)';
+  } else {
+    dropdownMenu.classList.remove('show');
+    dropdownArrow.style.transform = 'rotate(0deg)';
+  }
 }
 
   const dropdownToggle = document.querySelector('.dropdown-toggle');
@@ -67,43 +68,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const dropdownArrow = document.querySelector('.dropdown-arrow');
 
   if (dropdownToggle && dropdownMenu) {
-    // Toggle dropdown on click
     dropdownToggle.addEventListener('click', toggleDropdown);
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function (event) {
-      const dropdowns = document.getElementsByClassName('dropdown-menu');
-      const arrows = document.getElementsByClassName('dropdown-arrow');
+    // Close dropdown on outside click
+  document.addEventListener('click', function (event) {
+    const toggleBtn = document.querySelector('.dropdown-toggle');
+    const dropdown = document.getElementById('userDropdown');
 
-      for (const dropdown of dropdowns) {
-        if (dropdown.classList.contains('show')) {
-          dropdown.classList.remove('show');
-        }
+    // If the click is NOT inside the dropdown or on the toggle button
+    if (!event.target.closest('.profile-desktop-dropdown')) {
+      if (dropdown) dropdown.classList.remove('show');
+      if (toggleBtn) {
+        const arrow = toggleBtn.querySelector('.dropdown-arrow');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
       }
+    }
+  });
 
-      for (const arrow of arrows) {
-        arrow.style.transform = 'rotate(0)';
-      }
-    });
 
-    // Close dropdown on escape key
+
+    // Close dropdown on Escape key
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') {
-        const dropdowns = document.getElementsByClassName('dropdown-menu');
-        const arrows = document.getElementsByClassName('dropdown-arrow');
-
-        for (const dropdown of dropdowns) {
-          dropdown.classList.remove('show');
-        }
-
-        for (const arrow of arrows) {
-          arrow.style.transform = 'rotate(0)';
-        }
+        dropdownMenu.classList.remove('show');
+        dropdownArrow.style.transform = 'rotate(0deg)';
       }
     });
   }
 
-  // Mobile nav and blur overlay logic (match landing page)
+  // 📱 Mobile nav and blur overlay logic
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('mainNavLinks');
   const blurOverlay = document.getElementById('navBlurOverlay');
@@ -123,7 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
         blurOverlay.classList.remove('active');
       }
     });
+
     blurOverlay.addEventListener('click', closeMobileNav);
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeMobileNav();
     });

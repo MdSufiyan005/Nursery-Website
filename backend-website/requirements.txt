@@ -15,3 +15,14 @@ whitenoise
 psycopg[binary,pool]
 vercel-python 
 vercel-python-wsgi
+unfold
+setuptools
+django
+dotenv
+python-decouple
+django-allauth_ui
+django-allauth
+django-import_export
+requests
+jwt
+razorpay

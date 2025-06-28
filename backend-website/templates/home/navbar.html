@@ -3,8 +3,7 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
 <link rel="stylesheet" href="{% static 'css/home_page.css' %}" />
-{% endblock style %} 
-{% block content %}
+{% endblock style %} {% block content %}
 <nav class="navbar">
   <a href="{% url 'home' %}" class="nav-brand"> 🌿 Nursery </a>
   <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
@@ -38,16 +37,16 @@
     </li>
     {% if user.is_authenticated %}
     <li class="profile-desktop-dropdown">
-      <button class="user-menu dropdown-toggle" onclick="toggleDropdown(event)">
+      <button class="user-menu dropdown-toggle">
         👤 {{ user.username }}
         <span class="dropdown-arrow">▼</span>
       </button>
       <div class="dropdown-menu" id="userDropdown">
         <a href="/profile_view/" class="dropdown-item">Profile</a>
-        <a href="{% url 'account_logout' %}" class="dropdown-item">🚪 Logout</a>
+        <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
       </div>
     </li>
-    <li class="profile-mobile-link"><a href="{% url 'profile_view' %}">Profile</a></li>
+    <li class="profile-mobile-link"><a href="/profile_view/">Profile</a></li>
     <li class="profile-mobile-link">
       <a href="{% url 'account_logout' %}">Logout</a>
     </li>

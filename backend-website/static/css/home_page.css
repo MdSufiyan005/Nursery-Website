@@ -318,6 +318,25 @@
           background: var(--accent);
           color: white;
         }
+
+        .faq-item .faq-question {
+          transition: background 0.3s, transform 0.3s;
+        }
+        .faq-item .faq-question:hover,
+        .faq-item .faq-question:active,
+        .faq-item.active .faq-question {
+          background: #f1f3f5;
+          transform: scale(1.01);
+        }
+        .nav-links a {
+          transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+        .nav-links a:hover,
+        .nav-links a:active {
+          background: var(--accent);
+          color: white;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
       }
 
       @media (max-width: 480px) {
@@ -624,3 +643,5 @@
     height: 100vh;
     pointer-events: none;
   }
+
+

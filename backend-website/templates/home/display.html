@@ -3,7 +3,7 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/display.css' %}">
-{% endblock style %}
+{% endblock %}
 
 {% block content %}
 {% include 'home/navbar.html' %}
@@ -20,18 +20,21 @@
     <div id="filterSection">
         <form method="get" id="filterForm">
             <div class="filter-controls">
-                <select name="category" id="categorySelect" class="filter-select">
-                    <option value="">All Categories</option>
-                    <option value="Indoor" {% if selected_category == 'Indoor' %}selected{% endif %}>Indoor</option>
-                    <option value="Outdoor" {% if selected_category == 'Outdoor' %}selected{% endif %}>Outdoor</option>
-                    <option value="Tree" {% if selected_category == 'Tree' %}selected{% endif %}>Tree</option>
-                </select>
-
-                <select name="sort" id="sortSelect" class="filter-select">
-                    <option value="">Sort by</option>
-                    <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
-                    <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
-                </select>
+                <div class="custom-dropdown-wrapper">
+                    <select name="category" id="categorySelect" class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="Indoor" {% if selected_category == 'Indoor' %}selected{% endif %}>Indoor</option>
+                        <option value="Outdoor" {% if selected_category == 'Outdoor' %}selected{% endif %}>Outdoor</option>
+                        <option value="Tree" {% if selected_category == 'Tree' %}selected{% endif %}>Tree</option>
+                    </select>
+                </div>
+                <div class="custom-dropdown-wrapper">
+                    <select name="sort" id="sortSelect" class="filter-select">
+                        <option value="">Sort by</option>
+                        <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </div>
 
                 <input type="hidden" name="min_price" id="min_price_input">
                 <input type="hidden" name="max_price" id="max_price_input">
@@ -110,5 +113,8 @@
     </div>
     {% endif %}
 </div>
-{% block script %}<script src="{% static 'js/display.js' %}"></script>{% endblock script %}
+{% block script %}
+<script src="{% static 'js/display.js' %}"></script>
+<script src="{% static 'js/custom-dropdown.js' %}"></script>
+{% endblock script %}
 {% endblock %}
