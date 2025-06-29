@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # Add this import
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from accounts.models import  ProfileDetail
 from data.models import Plant, Order, OrderItem
 from data.constants import PaymentStatus
 from django.conf import settings
@@ -16,7 +17,19 @@ from django.template.defaultfilters import register
 import os 
 from data.forms import ContactMessageForm
 from django.db.models import Min, Max
-from data.forms import ProfileDetailForm
+from allauth.account.views import LoginView, SignupView
+from .forms import ProfileDetailForm
+
+def auth_combined_view(request):
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+        if form_type == 'login':
+            return LoginView.as_view()(request)
+        elif form_type == 'signup':
+            return SignupView.as_view()(request)
+    else:
+        return LoginView.as_view()(request)
+
 
 @login_required
 def profile(request):
@@ -28,7 +41,24 @@ def profile(request):
 def home(request):
     return render(request, 'main.html', {})
 
+@login_required
+def profile_view(request):
+    profile_instance = getattr(request.user, 'profiledetail', None)
+    submitted = False
 
+    if request.method == 'POST':
+        form = ProfileDetailForm(request.POST, instance=profile_instance, user=request.user)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            if not profile_instance:
+                profile.user = request.user  # Link profile to user if new
+            profile.save()
+            # Redirect after POST to prevent CSRF error on reload
+            return redirect('profile_view')
+    else:
+        form = ProfileDetailForm(instance=profile_instance, user=request.user)
+
+    return render(request, 'profile.html', {'user': request.user, 'form': form, 'submitted': submitted})
 # def display(request):
 #     plants = Plant.objects.all()
 #     return render(request,'home/display.html', {'plants': plants})
@@ -41,6 +71,8 @@ def display(request):
     sort = request.GET.get('sort', '')
 
     plants = Plant.objects.all()
+
+    plant_names = list(plants.values_list('name', flat=True))
 
     real_min_price = Plant.objects.aggregate(Min('price'))['price__min'] or 0
     real_max_price = Plant.objects.aggregate(Max('price'))['price__max'] or 1000
@@ -68,6 +100,7 @@ def display(request):
 
     return render(request, 'home/display.html', {
         'plants': plants,
+        'plant_names': plant_names,
         'query': query,
         'selected_category': category,
         'min_price': min_price,
@@ -77,22 +110,7 @@ def display(request):
         'real_max_price': real_max_price
     })
 
-@login_required
-def profile_view(request):
-    form = ProfileDetailForm()
-    submitted = False
 
-    if request.method == 'POST':
-        form = ProfileDetailForm(request.POST)
-        if form.is_valid():
-            profile = form.save(commit=False)
-            profile.user = request.user  # Assign the logged-in user
-            profile.save()
-            submitted = True
-
-    return render(request, 'profile.html', {'user': request.user, 'form': form, 'submitted': submitted})
-
-@login_required
 def search_suggestions(request):
     query = request.GET.get('q', '')
     results = []
@@ -124,7 +142,6 @@ def SpecificPlant(request, plant_id):
         'similar_plants': similar_plants,
     })
 
-
 @login_required
 def checkout(request):
     print("[CHECKOUT DEBUG] Checkout view called for user:", request.user.username)
@@ -143,15 +160,12 @@ def checkout(request):
             total += line_total
         except Plant.DoesNotExist:
             continue
+    
     from accounts.models import ProfileDetail
     profile = None
-    try:
-        profile = ProfileDetail.objects.get(user=request.user)
-    except ProfileDetail.DoesNotExist:
-        profile = ProfileDetail.objects.filter(email=request.user.email).first()
-        if profile:
-            profile.user = request.user
-            profile.save()
+    # Always fetch by email (email is unique)
+    profile = ProfileDetail.objects.filter(email=request.user.email).first()
+    # If not found, create a new profile for this email/user
     if not profile:
         profile = ProfileDetail.objects.create(
             user=request.user,
@@ -159,9 +173,25 @@ def checkout(request):
             email=request.user.email,
             contact='',
             address='',
-            pincode=''
+            pincode='',
+            city='',
+            state='',
         )
-    print(f"[CHECKOUT DEBUG] ProfileDetail for user {request.user.username}: name={getattr(profile, 'name', None)}, email={getattr(profile, 'email', None)}, contact={getattr(profile, 'contact', None)}, address={getattr(profile, 'address', None)}, pincode={getattr(profile, 'pincode', None)}")
+    else:
+        # If found but not linked to user, link it
+        if not profile.user:
+            profile.user = request.user
+            profile.save()
+    print(
+    f"[CHECKOUT DEBUG] ProfileDetail for user {request.user.username}: "
+    f"name={getattr(profile, 'name', None)}, "
+    f"email={getattr(profile, 'email', None)}, "
+    f"contact={getattr(profile, 'contact', None)}, "
+    f"address={getattr(profile, 'address', None)}, "
+    f"pincode={getattr(profile, 'pincode', None)}, "
+    f"city={getattr(profile, 'city', None)}, "
+    f"state={getattr(profile, 'state', None)}"
+)
     def get_autofill(val, fallback=None):
         return val if val and str(val).strip() else (fallback or '')
     autofill = {
@@ -170,6 +200,8 @@ def checkout(request):
         'contact': get_autofill(profile.contact, ''),
         'address': get_autofill(profile.address, ''),
         'pincode': get_autofill(profile.pincode, ''),
+        'city': get_autofill(profile.city,''),
+        'state':get_autofill(profile.state,''),
     }
     print(f"[CHECKOUT DEBUG] Autofill context: {autofill}")
     print(f"[CHECKOUT DEBUG] Passing context to template: cart_items={items}, total_amount={total}, autofill={autofill}")
@@ -229,10 +261,10 @@ def update_cart_quantity(request, plant_id):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 @login_required
 def cart_view(request):
+    print("[CART_VIEW DEBUG] Called for user:", request.user.username)
     cart = request.session.get('cart', {})
     items = []
     total = 0
-    
     for pid, qty in cart.items():
         try:
             plant = get_object_or_404(Plant, id=pid)
@@ -245,12 +277,41 @@ def cart_view(request):
             total += line_total
         except Plant.DoesNotExist:
             continue
-
+    # Try to get profile and autofill as in checkout
+    from accounts.models import ProfileDetail
+    profile = None
+    profile = ProfileDetail.objects.filter(user=request.user).first()
+    if not profile:
+        profile = ProfileDetail.objects.create(
+            user=request.user,
+            name=request.user.get_full_name() or request.user.username,
+            email=request.user.email,
+            contact='',
+            address='',
+            pincode='',
+            city='',
+            state='',
+        )
+    def get_autofill(val, fallback=None):
+        return val if val and str(val).strip() else (fallback or '')
+    autofill = {
+        'name': get_autofill(profile.name, request.user.get_full_name() or request.user.username),
+        'email': get_autofill(profile.email, request.user.email),
+        'contact': get_autofill(profile.contact, ''),
+        'address': get_autofill(profile.address, ''),
+        'pincode': get_autofill(profile.pincode, ''),
+        'city': get_autofill(profile.city,''),
+        'state':get_autofill(profile.state,''),
+    }
+    print(f"[CART_VIEW DEBUG] Autofill context: {autofill}")
+    print(f"[CART_VIEW DEBUG] Passing context to template: cart_items={items}, total_amount={total}, autofill={autofill}")
     context = {
         'cart_items': items,
         'total_amount': total,  # Changed from order.total to total_amount
+        'autofill': autofill,
+        'profile': profile,
+        'user': request.user,
     }
-    
     return render(request, 'home/checkout.html', context)
 @login_required
 def remove_from_cart(request, plant_id):
@@ -326,7 +387,6 @@ def order_payment(request):
 
         total = 0
         order_items = []
-        
         for pid, qty in cart.items():
             try:
                 plant = get_object_or_404(Plant, id=pid)
@@ -343,21 +403,31 @@ def order_payment(request):
 
         # Verify total matches form submission
         form_total = float(request.POST.get('total_amount', 0))
-        if abs(form_total - total) > 0.01:  # Allow for small floating point differences
+        if abs(form_total - total) > 0.01:
             messages.error(request, "Order total mismatch. Please try again.")
             return redirect('cart_view')
 
+        # --- Update ProfileDetail with order info only if profile fields are empty or whitespace ---
+        from accounts.models import ProfileDetail
+        profile, created = ProfileDetail.objects.get_or_create(user=request.user)
+        profile.name = request.POST.get('name', profile.name)
+        profile.email = request.POST.get('email', profile.email)
+        profile.contact = request.POST.get('phone_number', profile.contact)
+        profile.address = request.POST.get('address', profile.address)
+        profile.pincode = request.POST.get('pincode', profile.pincode)
+        profile.city = request.POST.get('city', profile.city)
+        profile.state = request.POST.get('state', profile.state)
+        profile.save()
+        # --- End ProfileDetail update ---
+
         # Initialize Razorpay
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-        
-        # Create Razorpay order (amount in paise)
         payment_order = client.order.create({
             "amount": int(total * 100),
             "currency": "INR",
             "payment_capture": "1"
         })
 
-        # Create order in database
         order = Order.objects.create(
             user=request.user,
             name=request.POST.get('name'),
@@ -371,7 +441,6 @@ def order_payment(request):
             provider_order_id=payment_order['id']
         )
 
-        # Create order items
         for item in order_items:
             OrderItem.objects.create(
                 order=order,
@@ -381,7 +450,6 @@ def order_payment(request):
                 price=item['price']
             )
 
-        # Prepare payment context
         context = {
             "razorpay_key": settings.RAZORPAY_KEY_ID,
             "order": order,
@@ -389,7 +457,6 @@ def order_payment(request):
             "total_amount": total,
             "order_items": order_items
         }
-        
         return render(request, "payment.html", context)
 
     except Exception as e:

@@ -1,10 +1,15 @@
 from django import forms
 from .models import ContactMessage
+<<<<<<< HEAD
 # from .models import UserShippingDetails
 from django import forms
 from data.models import Order
 from django.core.validators import RegexValidator
 from .models import ProfileDetail
+=======
+from .models import UserShippingDetails
+
+>>>>>>> f626f9c05c44a1aab21c7d53f62dbc918e24dce0
 
 class ContactMessageForm(forms.ModelForm):
     class Meta:
@@ -12,6 +17,7 @@ class ContactMessageForm(forms.ModelForm):
         fields = ('fullname', 'email', 'message')
 
 
+<<<<<<< HEAD
 # class ShippingDetailsForm(forms.ModelForm):
 #     class Meta:
 #         model = UserShippingDetails
@@ -59,3 +65,9 @@ class ProfileDetailForm(forms.ModelForm):
     class Meta:
         model = ProfileDetail
         fields = ('name', 'email', 'contact', 'address', 'pincode')
+=======
+class ShippingDetailsForm(forms.ModelForm):
+    class Meta:
+        model = UserShippingDetails
+        exclude = ['user']
+>>>>>>> f626f9c05c44a1aab21c7d53f62dbc918e24dce0

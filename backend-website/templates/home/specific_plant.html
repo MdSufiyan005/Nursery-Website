@@ -1,132 +1,140 @@
-{% extends "main.html" %}
-{% load static%}
+{% extends "main.html" %} {% load static%} {% block style %}<link
+  rel="stylesheet"
+  href="{% static 'css/specific_plant.css'%}"
+/>{% endblock style %} {% block content %}
+<input
+  type="hidden"
+  id="cart-data"
+  value="{{ request.session.cart|jsonify }}"
+/>
 
-{% block style %}<link rel="stylesheet" href="{% static 'css/specific_plant.css'%}" />{% endblock style %}
+{% include 'home/navbar.html' %}
 
-
-{% block content %}
-  <input type="hidden" id="cart-data" value="{{ request.session.cart|jsonify }}">
-
-  {% include 'home/navbar.html' %}
-
-
-  <div class="detail-wrapper">
-    <div class="image-side">
-      <img src="{{ plant.image.url }}" alt="{{ plant.name }}">
-      {% if plant.Quantity == 0 %}
-        <div class="out-of-stock-badge">Out of Stock</div>
-      {% endif %}
-    </div>
-
-    <div class="info-side">
-      <h2>🌿 {{ plant.name }}</h2>
-      <div class="category">📂 <strong>Category:</strong> {{ plant.Category }}</div>
-      <div class="price">💰 <strong>Price:</strong> ₹{{ plant.price }}</div>
-      <div class="stock-status">
-        📦 <strong>Availability:</strong> 
-        {% if plant.Quantity > 0 %}
-          <span class="in-stock">In Stock ({{ plant.Quantity }} available)</span>
-        {% else %}
-          <span class="out-of-stock">Out of Stock</span>
-        {% endif %}
-      </div>
-      <div class="description">
-        📝 <strong>Description:</strong><br>
-        {{ plant.Desciption }}
-      </div>
-      {% if plant.Quantity > 0 %}
-        <button class="purchase-button js-add-cart" 
-          data-url="{% url 'add_to_cart' plant.id %}" 
-          data-plant-id="{{ plant.id }}"
-          data-auth="{{ user.is_authenticated|lower }}"
-          data-login-url="{% url 'account_login' %}">
-          🛒 Add to Cart
-        </button>
-      {% else %}
-        <button class="purchase-button out-of-stock-button" disabled>
-          ❌ Out of Stock
-        </button>
-      {% endif %}
-    </div>
-
-    <div class="similar-plants">
-      <h3>🌱 Similar Plants</h3>
-      <div class="similar-grid">
-        {% for similar in similar_plants %}
-          <div class="similar-card">
-            <div class="image-container">
-              <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="home-image">
-            </div>
-            <div class="text-container">
-              <h4>{{ similar.name }}</h4>
-              <p>{{ similar.Category }} | ₹{{ similar.price }}</p>
-            </div>
-            <a href="{% url 'SpecificPlant' similar.id %}" class="purchase-button">
-              Look at it
-            </a>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
+<div class="detail-wrapper">
+  <div class="image-side">
+    <img src="{{ plant.image.url }}" alt="{{ plant.name }}" />
+    {% if plant.Quantity == 0 %}
+    <div class="out-of-stock-badge">Out of Stock</div>
+    {% endif %}
   </div>
 
-  <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('.js-add-cart');
-    
-    buttons.forEach(btn => {
-        const plantId = btn.dataset.plantId;
-        const isAuthenticated = btn.dataset.auth === 'true';
-        const loginUrl = btn.dataset.loginUrl;
+  <div class="info-side">
+    <h2>🌿 {{ plant.name }}</h2>
+    <div class="category">
+      📂 <strong>Category:</strong> {{ plant.Category }}
+    </div>
+    <div class="price">💰 <strong>Price:</strong> ₹{{ plant.price }}</div>
+    <div class="stock-status">
+      📦 <strong>Availability:</strong>
+      {% if plant.Quantity > 0 %}
+      <span class="in-stock">In Stock ({{ plant.Quantity }} available)</span>
+      {% else %}
+      <span class="out-of-stock">Out of Stock</span>
+      {% endif %}
+    </div>
+    <div class="description">
+      📝 <strong>Description:</strong><br />
+      {{ plant.Desciption }}
+    </div>
+    {% if plant.Quantity > 0 %}
+    <button
+      class="purchase-button js-add-cart"
+      data-url="{% url 'add_to_cart' plant.id %}"
+      data-plant-id="{{ plant.id }}"
+      data-auth="{{ user.is_authenticated|lower }}"
+      data-login-url="{% url 'account_login' %}"
+    >
+      🛒 Add to Cart
+    </button>
+    {% else %}
+    <button class="purchase-button out-of-stock-button" disabled>
+      ❌ Out of Stock
+    </button>
+    {% endif %}
+  </div>
 
-        // Check if item is in cart and update button state
-        if (isAuthenticated && isInCart(plantId)) {
-            updateButtonToAdded(btn);
+  <div class="similar-plants">
+    <h3>🌱 Similar Plants</h3>
+    <div class="similar-grid">
+      {% for similar in similar_plants %}
+      <div class="similar-card">
+        <div class="image-container">
+          <img
+            src="{{ similar.image.url }}"
+            alt="{{ similar.name }}"
+            class="home-image"
+          />
+        </div>
+        <div class="text-container">
+          <h4>{{ similar.name }}</h4>
+          <p>{{ similar.Category }} | ₹{{ similar.price }}</p>
+        </div>
+        <a href="{% url 'SpecificPlant' similar.id %}" class="purchase-button">
+          Look at it
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".js-add-cart");
+
+    buttons.forEach((btn) => {
+      const plantId = btn.dataset.plantId;
+      const isAuthenticated = btn.dataset.auth === "true";
+      const loginUrl = btn.dataset.loginUrl;
+
+      // Check if item is in cart and update button state
+      if (isAuthenticated && isInCart(plantId)) {
+        updateButtonToAdded(btn);
+      }
+
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        // Check authentication first
+        if (!isAuthenticated) {
+          // Show login popup
+          showLoginModal(loginUrl);
+          return;
         }
 
-        btn.addEventListener('click', async (e) => {
-            e.preventDefault();
+        const url = btn.dataset.url;
 
-            // Check authentication first
-            if (!isAuthenticated) {
-                // Show login popup
-                showLoginModal(loginUrl);
-                return;
-            }
+        try {
+          if (btn.classList.contains("added")) {
+            // Remove from cart if already added
+            const response = await fetch(`/remove-from-cart/${plantId}/`);
+            const data = await response.json();
 
-            const url = btn.dataset.url;
-            
-            try {
-                if (btn.classList.contains('added')) {
-                    // Remove from cart if already added
-                    const response = await fetch(`/remove-from-cart/${plantId}/`);
-                    const data = await response.json();
-                    
-                    if (response.ok) {
-                        updateButtonToAdd(btn);
-                        updateCartCount(data.cart_count);
-                    }
-                } else {
-                    // Add to cart if not added
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    
-                    if (response.ok) {
-                        updateButtonToAdded(btn);
-                        updateCartCount(data.cart_count);
-                    }
-                }
-            } catch (err) {
-                console.error('Cart operation failed:', err);
+            if (response.ok) {
+              updateButtonToAdd(btn);
+              updateCartCount(data.cart_count);
             }
-        });
+          } else {
+            // Add to cart if not added
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+              updateButtonToAdded(btn);
+              updateCartCount(data.cart_count);
+            }
+          }
+        } catch (err) {
+          console.error("Cart operation failed:", err);
+        }
+      });
     });
 
     function showLoginModal(loginUrl) {
-        // Create modal element
-        const modal = document.createElement('div');
-        modal.className = 'login-modal';
-        modal.innerHTML = `
+      // Create modal element
+      const modal = document.createElement("div");
+      modal.className = "login-modal";
+      modal.innerHTML = `
             <div class="modal-content">
                 <h3>Please Login</h3>
                 <p>You need to be logged in to add items to cart.</p>
@@ -137,9 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Add modal styles
-        const style = document.createElement('style');
-        style.textContent = `
+      // Add modal styles
+      const style = document.createElement("style");
+      style.textContent = `
             .login-modal {
                 position: fixed;
                 top: 0;
@@ -184,10 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             .login-btn:hover {
-                background:rgb(255, 53, 60);
-                color: white;
-
-            } 
+                background: #43a047;
+                color:white;
+            }
             
             .cancel-btn {
                 padding: 0.75rem 1.5rem;
@@ -215,43 +222,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         `;
 
-        document.head.appendChild(style);
-        document.body.appendChild(modal);
+      document.head.appendChild(style);
+      document.body.appendChild(modal);
 
-        // Handle cancel button click
-        const cancelBtn = modal.querySelector('.cancel-btn');
-        cancelBtn.addEventListener('click', () => {
-            modal.remove();
-        });
+      // Handle cancel button click
+      const cancelBtn = modal.querySelector(".cancel-btn");
+      cancelBtn.addEventListener("click", () => {
+        modal.remove();
+      });
 
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.remove();
-            }
-        });
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
     }
 
     function updateButtonToAdded(btn) {
-        btn.textContent = '✅ Added to Cart';
-        btn.classList.add('added');
+      btn.textContent = "✅ Added to Cart";
+      btn.classList.add("added");
     }
 
     function updateButtonToAdd(btn) {
-        btn.textContent = '🛒 Add to Cart';
-        btn.classList.remove('added');
+      btn.textContent = "🛒 Add to Cart";
+      btn.classList.remove("added");
     }
 
     function updateCartCount(count) {
-        const badge = document.getElementById('cart-count');
-        if (badge) badge.textContent = count;
+      const badge = document.getElementById("cart-count");
+      if (badge) badge.textContent = count;
     }
 
     function isInCart(plantId) {
-        // You'll need to pass the cart data from Django to check this
-        const cartData = JSON.parse(document.getElementById('cart-data').value || '{}');
-        return plantId in cartData;
+      // You'll need to pass the cart data from Django to check this
+      const cartData = JSON.parse(
+        document.getElementById("cart-data").value || "{}"
+      );
+      return plantId in cartData;
     }
-});
+  });
 </script>
 {% endblock content %}

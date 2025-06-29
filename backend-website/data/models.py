@@ -35,7 +35,7 @@ class Plant(models.Model):
 
     def __str__(self):
         return self.name
-
+    
 class User_details(AbstractBaseUser):
     user_name = models.CharField(max_length=100, unique=True)
     Phone_number = models.IntegerField()
@@ -45,6 +45,8 @@ class User_details(AbstractBaseUser):
     def __str__(self):
         return self.user_name
     
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='items')
     plant = models.ForeignKey('Plant', on_delete=models.SET_NULL, null=True)
@@ -107,6 +109,7 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.fullname or 'No Name'} - {self.email or 'No Email'}"
 
+<<<<<<< HEAD
 # class UserShippingDetails(models.Model):
 #     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 #     name = models.CharField(max_length=254)
@@ -142,5 +145,17 @@ class ProfileDetail(models.Model):
     address = models.TextField()
     pincode = models.CharField(max_length=6, default="000000")
 
+=======
+class UserShippingDetails(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=254)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=15)
+    address = models.TextField()
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
+    
+>>>>>>> f626f9c05c44a1aab21c7d53f62dbc918e24dce0
     def __str__(self):
-        return self.name
+        return f"Shipping details for {self.user.username}"

@@ -428,35 +428,12 @@
       }
 
       @media screen and (max-width: 768px) {
-        /* Background Blur Overlay when Menu is open */
-        .blur-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          backdrop-filter: blur(12px) saturate(160%);
-          -webkit-backdrop-filter: blur(12px) saturate(160%);
-          z-index: 997;
-          transition: opacity 0.3s ease;
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        .blur-overlay.active {
-          opacity: 1;
-          pointer-events: all;
-        }
-
         .container {
           flex-direction: column;
           position: relative;
           z-index: 0;
         }
 
-        .sidebar {
-          display: none;
-        }
 
         .mobile-nav {
           display: block;
@@ -622,3 +599,92 @@
         width: fit-content;
         align-self: flex-end;
       }
+      /* --- Mobile Profile Dropdown: Match Navbar Dropdown --- */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    border-radius: 16px;
+    padding: 10px 0;
+    min-width: 160px;
+    z-index: 1000;
+    display: none; /* Hide by default */
+    margin-top: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dropdown-menu.show {
+    display: flex;
+  }
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    min-width: 100px;
+    margin: 4px 0;
+    padding: 10px 0;
+    text-decoration: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    background: none;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 transparent;
+    transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+  }
+  .dropdown-item:hover,
+  .dropdown-item:active,
+  .dropdown-item:focus {
+    background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #1b5e20;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    outline: none;
+    border-radius: 10px;
+  }
+}
+/* --- End Mobile Profile Dropdown --- */
+
+/* Mobile sidebar styles */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80vw;
+    max-width: 320px;
+    height: 100vh;
+    background: linear-gradient(160deg, #a8e6cf, #dcedc1); /* Match desktop color */
+    box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+    z-index: 1002;
+    transition: left 0.3s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    border-radius: 0 16px 16px 0;
+  }
+  .sidebar.show {
+    left: 0;
+  }
+  .sidebar:not(.show) {
+    left: -100%;
+  }
+  .back-btn {
+    display: block !important;
+    margin-bottom: 1rem;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    color: #333;
+    cursor: pointer;
+  }
+}

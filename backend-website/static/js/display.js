@@ -139,3 +139,46 @@ if (slider && window.noUiSlider) {
 
 
     });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("search");
+  const dataTag = document.getElementById("plant-names");
+
+  if (!dataTag || !searchInput) return;
+
+  const plantNames = JSON.parse(dataTag.textContent);
+
+  let i = 0, j = 0;
+  let isDeleting = false;
+  let showCursor = true; // Cursor toggle
+
+  function type() {
+    if (!plantNames.length) return;
+
+    const fullText = plantNames[i];
+    const currentText = isDeleting
+      ? fullText.substring(0, j--)
+      : fullText.substring(0, j++);
+
+    // Add blinking cursor
+    searchInput.placeholder = currentText + (showCursor ? "|" : "");
+
+    if (!isDeleting && j === fullText.length + 1) {
+      isDeleting = true;
+      setTimeout(type, 1000);
+      return;
+    }
+
+    if (isDeleting && j === 0) {
+      isDeleting = false;
+      i = (i + 1) % plantNames.length;
+    }
+
+    // Toggle cursor on every frame
+    showCursor = !showCursor;
+
+    setTimeout(type, isDeleting ? 50 : 100);
+  }
+
+  type();
+});

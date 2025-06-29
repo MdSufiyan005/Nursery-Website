@@ -1,7 +1,0 @@
-components:
-  base:
-    path: components/base
-  forms:
-    path: components/forms
-  layout:
-    path: components/layout
