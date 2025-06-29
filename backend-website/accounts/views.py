@@ -124,12 +124,63 @@ def SpecificPlant(request, plant_id):
         'similar_plants': similar_plants,
     })
 
-@login_required
-def checkout(request,plant_id):
-    plant = Plant.objects.get(id=plant_id)
-    print(plant)
-    return render(request, 'home/checkout.html', {'plant': plant})
 
+@login_required
+def checkout(request):
+    print("[CHECKOUT DEBUG] Checkout view called for user:", request.user.username)
+    cart = request.session.get('cart', {})
+    items = []
+    total = 0
+    for pid, qty in cart.items():
+        try:
+            plant = get_object_or_404(Plant, id=pid)
+            line_total = float(plant.price) * int(qty)
+            items.append({
+                'plant': plant,
+                'quantity': qty,
+                'line_total': line_total,
+            })
+            total += line_total
+        except Plant.DoesNotExist:
+            continue
+    from accounts.models import ProfileDetail
+    profile = None
+    try:
+        profile = ProfileDetail.objects.get(user=request.user)
+    except ProfileDetail.DoesNotExist:
+        profile = ProfileDetail.objects.filter(email=request.user.email).first()
+        if profile:
+            profile.user = request.user
+            profile.save()
+    if not profile:
+        profile = ProfileDetail.objects.create(
+            user=request.user,
+            name=request.user.get_full_name() or request.user.username,
+            email=request.user.email,
+            contact='',
+            address='',
+            pincode=''
+        )
+    print(f"[CHECKOUT DEBUG] ProfileDetail for user {request.user.username}: name={getattr(profile, 'name', None)}, email={getattr(profile, 'email', None)}, contact={getattr(profile, 'contact', None)}, address={getattr(profile, 'address', None)}, pincode={getattr(profile, 'pincode', None)}")
+    def get_autofill(val, fallback=None):
+        return val if val and str(val).strip() else (fallback or '')
+    autofill = {
+        'name': get_autofill(profile.name, request.user.get_full_name() or request.user.username),
+        'email': get_autofill(profile.email, request.user.email),
+        'contact': get_autofill(profile.contact, ''),
+        'address': get_autofill(profile.address, ''),
+        'pincode': get_autofill(profile.pincode, ''),
+    }
+    print(f"[CHECKOUT DEBUG] Autofill context: {autofill}")
+    print(f"[CHECKOUT DEBUG] Passing context to template: cart_items={items}, total_amount={total}, autofill={autofill}")
+    context = {
+        'cart_items': items,
+        'total_amount': total,
+        'profile': profile,
+        'user': request.user,
+        'autofill': autofill,
+    }
+    return render(request, 'home/checkout.html', context)
 
 @login_required
 def add_to_cart(request, plant_id):

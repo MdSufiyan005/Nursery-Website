@@ -7,7 +7,8 @@ from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
 from .constants import PaymentStatus
 from django.conf import settings
-
+from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 plant_choices = [
     ('Indoor', 'Indoor'),
@@ -119,14 +120,6 @@ class ContactMessage(models.Model):
 #     def __str__(self):
 #         return f"Shipping details for {self.user.username}"
 
-
-from django.db import models
-
-# Create your models here.
-from django.contrib.auth.models import User
-from django.utils.text import slugify
-
-
 # Create your models here.
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -142,10 +135,12 @@ class UserProfile(models.Model):
 
 # Create your models here.
 class ProfileDetail(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profiledetail', null=True, blank=True)
     name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)  # restored unique=True
     contact = models.CharField(max_length=10)
     address = models.TextField()
+    pincode = models.CharField(max_length=6, default="000000")
 
     def __str__(self):
         return self.name
