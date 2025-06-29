@@ -1,0 +1,415 @@
+/* Use nav bar styling from home_page.css, remove conflicting styles */
+.navbar {
+  /* styling is now inherited from home_page.css nav selector */
+}
+
+.nav-brand {
+  text-decoration: none;
+  color: #2e7d32;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-items {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  gap: 24px;
+}
+
+.cart-icon {
+  position: relative;
+  text-decoration: none;
+  color: #33691e;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+}
+
+.cart-icon:hover {
+  background: var(--accent);
+}
+
+.cart-icon:hover .cart-svg {
+  stroke: #fff;
+}
+
+.cart-svg {
+  transition: stroke 0.3s;
+}
+
+#cart-count {
+  position: absolute;
+  top: -4px;         /* slightly above the icon */
+  right: -6px;       /* slightly to the right of the icon */
+  background-color: #e53935;
+  color: white;
+  border-radius: 10px; /* compact, not fully round */
+  padding: 0 5px;     /* enough for 1-2 digits, not too wide */
+  font-size: 13px;    /* slightly larger for readability */
+  min-width: 18px;    /* ensures badge doesn't shrink too much */
+  height: 18px;       /* keeps badge height consistent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  pointer-events: none;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+}
+
+/* Ensure cart badge stays close to icon on mobile */
+@media (max-width: 768px) {
+  .cart-icon {
+    position: relative;
+    /* ...existing code... */
+    text-decoration: none;
+    color: #33691e;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    }
+  #cart-count {
+    top: -2px;
+    right: -2px;
+    /* Remove any extra spacing or override if needed */
+    margin: 0;
+    padding: 0px 4px;
+    min-width: 16px;
+    font-size: 12px;
+  }
+}
+
+.login-btn {
+  text-decoration: none;
+  background-color: #ffffff;
+  color: #e53935;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background: #388e3c;
+}
+.profile-desktop-dropdown {
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.user-menu {
+  background: none;
+  border: none;
+  color: #33691e;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.user-menu:hover {
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  border-radius: 16px;
+  padding: 10px 0;
+  min-width: 160px;
+  z-index: 1000;
+  display: none; /* Hide by default */
+  margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-menu.show {
+  display: flex;
+  animation: dropdownFade 0.25s ease-out;
+}
+
+
+/* .dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  min-width: 100px;
+  margin: 4px 0;
+  padding: 10px 0;
+  text-decoration: none;
+  border-radius: 10px;
+  color: #2e7d32;
+  font-size: 15px;
+  font-weight: 500;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+} */
+
+/* .dropdown-item:hover, .dropdown-item:focus {
+  color: #1b5e20;
+  box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+  outline: none;
+  border-radius: 8px;
+}
+
+.dropdown-item:active {
+  background: #c8e6c9;
+  color: #1b5e20;
+} */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  min-width: 100px;
+  margin: 4px 0;
+  padding: 10px 0;
+  text-decoration: none;
+  border-radius: 10px;
+  color: #2e7d32;
+  font-size: 15px;
+  font-weight: 500;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: #1b5e20;
+  box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+  outline: none;
+  border-radius: 10px;
+}
+
+.dropdown-item:active {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    gap: 0;
+    padding: 1rem 1rem;
+  }
+  .nav-brand {
+    font-size: 1.3rem;
+  }
+  .menu-toggle {
+    display: block;
+    cursor: pointer;
+    font-size: 2rem;
+    background: var(--glass);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius);
+    color: var(--primary);
+    border: none;
+    transition: background 0.3s;
+    z-index: 1002;
+  }
+  .menu-toggle:active,
+  .menu-toggle:focus {
+    background: var(--accent);
+    color: white;
+  }
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem; /* reduced gap */
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: 100vw;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-radius: 0 0 20px 20px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    z-index: 1001;
+    margin: 0;
+    padding: 2.2rem 0 2.2rem 0;
+    align-items: center;
+    justify-content: center;
+    transition: max-height 0.4s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+  }
+  .nav-links.open {
+    max-height: 500px;
+    opacity: 1;
+  }
+  .nav-links li {
+    width: auto; /* was 100% */
+    text-align: center;
+  }
+  .nav-links a, .nav-links .user-menu {
+    width: auto; /* was 90% */
+    border-radius: 8px; /* match PC view */
+    padding: 0.4rem 1rem; /* match PC view, smaller button */
+    margin: 0.1rem 0;
+    display: inline-block;
+    font-size: 1rem;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+  }
+  .nav-links a:hover,
+  .nav-links a:active,
+  .nav-links .user-menu:hover,
+  .nav-links .user-menu:active {
+    background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #1b5e20;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    border-radius: 8px;
+  }
+  .cart-icon {
+    justify-content: center;
+    width: auto;
+    padding: 0.5rem 1rem;
+  }
+  #cart-count {
+    top: -4px;
+    right: -6px;
+    margin: 0;
+    padding: 0 5px;
+    min-width: 18px;
+    height: 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .profile-desktop-dropdown {
+    display: none !important;
+  }
+  .profile-mobile-link {
+    display: block !important;
+  }
+  .blur-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(14px);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .blur-overlay.active {
+    display: block;
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none !important;
+  }
+  .blur-overlay {
+    display: none !important;
+  }
+  .profile-desktop-dropdown {
+    display: block !important;
+  }
+  .profile-mobile-link {
+    display: none !important;
+  }
+}
+/* Desktop */
+@media (min-width: 769px) {
+  .profile-desktop-dropdown {
+    display: block !important;
+  }
+  .profile-mobile-link {
+    display: none !important;
+  }
+  .login-btn {
+    display: inline-block !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .profile-desktop-dropdown {
+    display: none !important;
+  }
+  .profile-mobile-link {
+    display: block !important;
+  }
+  .login-btn {
+    display: block !important;
+    width: 100%;
+    text-align: center;
+  }
+  .dropdown-item {
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  .dropdown-item:hover,
+  .dropdown-item:active,
+  .dropdown-item:focus {
+    background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #1b5e20;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    outline: none;
+    border-radius: 10px;
+  }
+  .login-btn {
+    transition: background 0.3s, color 0.3s;
+  }
+  .login-btn:hover,
+  .login-btn:active {
+    background: #388e3c;
+    color: #fff;
+  }
+}

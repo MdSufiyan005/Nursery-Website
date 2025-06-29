@@ -75,12 +75,6 @@
   </div>
 
   {% if cart_items %}
-  {% comment %} <div
-    style="background: #ffe; color: #a00; padding: 10px; margin-bottom: 10px"
-  >
-    DEBUG: autofill.contact = '{{ autofill.contact }}', autofill.address = '{{
-    autofill.address }}', autofill.pincode = '{{ autofill.pincode }}'
-  </div> {% endcomment %}
   <form
     action="{% url 'order_payment' %}"
     method="POST"

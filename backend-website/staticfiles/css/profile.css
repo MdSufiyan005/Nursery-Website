@@ -1,0 +1,690 @@
+:root {
+        --accent: #4caf50;
+        --accent-light: #81c784;
+        --text: #111;
+        --text-light: #555;
+        --background: #f5f5f5;
+        --primary: #2e7d32;
+        --primary-dark: #256029;
+        --card: #ffffff;
+        --glass: rgba(255, 255, 255, 0.2);
+        --glass-border: rgba(255, 255, 255, 0.3);
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --font-family: "Inter", sans-serif;
+      }
+
+      [data-theme="dark"] {
+        --background: #121212;
+        --card: #1e1e1e;
+        --text: #f0f0f0;
+        --text-light: #bcbcbc;
+        --primary: #66bb6a;
+        --primary-dark: #4caf50;
+        --glass: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.15);
+        --shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-family);
+      }
+
+      html,
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        height: 100vh;
+      }
+
+      .container {
+        display: flex;
+        height: 100%;
+      }
+
+      .sidebar {
+        width: 240px;
+        padding: 2rem 1rem;
+        background: linear-gradient(160deg, #a8e6cf, #dcedc1);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.03);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        border-radius: 0 1rem 1rem 0;
+      }
+
+      .sidebar button {
+        background: none;
+        border: none;
+        text-align: left;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: var(--text);
+      }
+
+      .sidebar button:hover,
+      .sidebar button.active {
+        background-color: var(--accent-light);
+        color: white;
+        transform: translateX(2px);
+      }
+
+      .content {
+        flex: 1;
+        padding: 2rem;
+        margin: 2rem;
+        border-radius: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          rgba(233, 238, 255, 0.6),
+          rgba(218, 243, 255, 0.6)
+        );
+        backdrop-filter: blur(18px) saturate(180%);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s ease;
+        overflow-y: auto;
+      }
+
+      header {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: var(--glass);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid var(--glass-border);
+        text-align: center;
+        color: var(--text);
+        box-shadow: var(--shadow);
+      }
+
+      .home-button,
+      .logout-button {
+        width: 100%;
+        background: linear-gradient(135deg, #ef5350, #e53935);
+        color: white;
+        font-weight: 700;
+        border: none;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+      }
+
+      .home-button:hover,
+      .logout-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 18px rgba(229, 57, 53, 0.3);
+      }
+
+      .profile-section {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+        background-color: var(--card);
+        padding: 2rem;
+        border-radius: 1.2rem;
+        box-shadow: var(--shadow);
+      }
+
+      /* 🖼️ Profile Picture Upload Icon Style */
+      .profile-pic-wrapper {
+        position: relative;
+        width: 140px;
+        height: 140px;
+      }
+
+      .profile-pic-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #c8e6c9;
+      }
+
+      /* 📸 Camera Icon Overlay */
+      .upload-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: var(--accent);
+        color: white;
+        border-radius: 50%;
+        padding: 0.4rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+      }
+
+      .upload-icon:hover {
+        background: var(--primary-dark);
+      }
+
+      .upload-icon i {
+        font-size: 1rem;
+      }
+
+      /* 📝 Name Input Box Smaller */
+      .name-section input {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        color: var(--text);
+        transition: all 0.3s ease;
+        width: 250px;
+        max-width: 100%;
+      }
+
+      .name-section input:focus {
+        outline: none;
+        border: 1px solid var(--accent);
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      .save-button {
+        padding: 0.7rem 1.6rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text);
+        background: var(--glass);
+        backdrop-filter: blur(10px) saturate(180%);
+        -webkit-backdrop-filter: blur(10px) saturate(180%);
+        border-radius: 1.5rem;
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .save-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          rgba(102, 187, 106, 0.2),
+          rgba(76, 175, 80, 0.4),
+          rgba(102, 187, 106, 0.2)
+        );
+        transition: all 0.5s ease;
+        z-index: 0;
+      }
+
+      .save-button:hover::before {
+        left: 0;
+      }
+
+      .save-button:hover {
+        color: var(--primary-dark);
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+      }
+
+      .save-button:active {
+        transform: scale(0.97);
+      }
+
+      .theme-section {
+        margin-bottom: 2rem;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+      }
+
+      .toggle-switch input {
+        display: none;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        border-radius: 30px;
+        transition: 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: var(--accent);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(30px);
+      }
+
+      .file-upload {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+
+      .custom-file-upload {
+        border: 2px dashed var(--accent);
+        padding: 0.8rem 1.4rem;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--accent);
+        transition: all 0.3s ease;
+        background-color: transparent;
+      }
+
+      .custom-file-upload:hover {
+        background-color: #e8f5e9;
+        border-color: var(--accent-light);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .mobile-nav {
+        display: none;
+        padding: 1rem;
+        background: #ffffff;
+        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .hamburger {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text);
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      .dropdown-menu {
+        display: none;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .dropdown-menu.show {
+        display: flex !important;
+      }
+
+      .mobile-nav .dropdown-menu button {
+        background: var(--accent);
+        color: white;
+        font-weight: 600;
+        padding: 0.7rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      .mobile-nav .dropdown-menu button:hover,
+      .mobile-nav .dropdown-menu button.active {
+        background-color: var(--primary-dark);
+        transform: scale(1.03);
+      }
+
+      .form-section,
+      .info-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+        color: var(--text-light);
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border: 2px solid var(--accent-light);
+        border-radius: 8px;
+        background-color: var(--background);
+        color: var(--text);
+        font-size: 1rem;
+        transition: 0.3s ease border, 0.3s ease box-shadow;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        outline: none;
+      }
+
+      button,
+      .edit-button {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text);
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover,
+      .edit-button:hover {
+        background: rgba(255, 255, 255, 0.35);
+        transform: scale(1.03);
+      }
+
+      @media screen and (max-width: 768px) {
+        .container {
+          flex-direction: column;
+          position: relative;
+          z-index: 0;
+        }
+
+
+        .mobile-nav {
+          display: block;
+          position: relative;
+          z-index: 1000;
+          padding: 1rem;
+          background: #ffffff;
+          border-bottom: 1px solid #e0e0e0;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hamburger {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          color: var(--text);
+          cursor: pointer;
+          padding: 0.5rem;
+        }
+
+        /* Dropdown Menu - Same as PC sidebar styling */
+        .dropdown-menu {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-top: 1rem;
+          padding: 2rem 1rem;
+          background: linear-gradient(160deg, #a8e6cf, #dcedc1);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 2px 0 12px rgba(0, 0, 0, 0.03);
+          border-radius: 1rem;
+          position: absolute;
+          width: 90%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-10px);
+          opacity: 0;
+          pointer-events: none;
+          z-index: 1002;
+          transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .dropdown-menu.show {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+          pointer-events: all;
+        }
+
+        /* Dropdown Buttons - Clean styling with proper alignment */
+        .dropdown-menu button {
+          background: none;
+          border: none;
+          text-align: center;
+          font-size: 1.1rem;
+          font-weight: 600;
+          padding: 0.8rem 1rem;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.3s;
+          color: var(--text);
+          margin: 0;
+        }
+
+        .dropdown-menu button:hover,
+        .dropdown-menu button.active {
+          background-color: var(--accent-light);
+          color: white;
+          transform: none;
+        }
+
+        /* Home and Logout buttons in dropdown */
+        .dropdown-menu .home-button,
+        .dropdown-menu .logout-button {
+          width: 100%;
+          background: linear-gradient(135deg, #ef5350, #e53935);
+          color: white;
+          font-weight: 700;
+          border: none;
+          padding: 0.8rem 1rem;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+          text-align: center;
+          transform: none;
+        }
+
+        .dropdown-menu .home-button:hover,
+        .dropdown-menu .logout-button:hover {
+          transform: scale(1.05);
+          box-shadow: 0 8px 18px rgba(229, 57, 53, 0.3);
+        }
+
+        .content {
+          margin: 1rem;
+          padding: 1.5rem;
+          border-radius: 1.2rem;
+          background: linear-gradient(
+            135deg,
+            rgba(233, 238, 255, 0.6),
+            rgba(218, 243, 255, 0.6)
+          );
+          backdrop-filter: blur(18px) saturate(180%);
+          -webkit-backdrop-filter: blur(18px) saturate(180%);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+          z-index: 1;
+        }
+
+        /* Better text contrast for mobile */
+        .content header {
+          color: #1a1a1a;
+          font-weight: 800;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .content h3 {
+          color: #1a1a1a;
+          font-weight: 700;
+        }
+
+        .form-group label {
+          color: #333;
+          font-weight: 600;
+        }
+
+        .profile-section {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(10px);
+        }
+
+        .name-section {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .name-section input {
+          text-align: center;
+          background: rgba(255, 255, 255, 0.9);
+          border: 2px solid #c8e6c9;
+          color: #1a1a1a;
+        }
+
+        .name-section input:focus {
+          background: rgba(255, 255, 255, 1);
+          border-color: var(--accent);
+        }
+      }
+      #settings .form-section {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      #settings .save-button {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 0.8rem;
+        width: fit-content;
+        align-self: flex-end;
+      }
+      /* --- Mobile Profile Dropdown: Match Navbar Dropdown --- */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    border-radius: 16px;
+    padding: 10px 0;
+    min-width: 160px;
+    z-index: 1000;
+    display: none; /* Hide by default */
+    margin-top: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dropdown-menu.show {
+    display: flex;
+  }
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    min-width: 100px;
+    margin: 4px 0;
+    padding: 10px 0;
+    text-decoration: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    background: none;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 transparent;
+    transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+  }
+  .dropdown-item:hover,
+  .dropdown-item:active,
+  .dropdown-item:focus {
+    background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #1b5e20;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    outline: none;
+    border-radius: 10px;
+  }
+}
+/* --- End Mobile Profile Dropdown --- */
+
+/* Mobile sidebar styles */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80vw;
+    max-width: 320px;
+    height: 100vh;
+    background: linear-gradient(160deg, #a8e6cf, #dcedc1); /* Match desktop color */
+    box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+    z-index: 1002;
+    transition: left 0.3s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    border-radius: 0 16px 16px 0;
+  }
+  .sidebar.show {
+    left: 0;
+  }
+  .sidebar:not(.show) {
+    left: -100%;
+  }
+  .back-btn {
+    display: block !important;
+    margin-bottom: 1rem;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    color: #333;
+    cursor: pointer;
+  }
+}
