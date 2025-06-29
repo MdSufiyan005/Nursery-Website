@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 def user_directory_path(instance, filename):
@@ -13,7 +13,8 @@ def user_directory_path(instance, filename):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='accounts_profile')
-    image = models.ImageField(upload_to=user_directory_path, default='img/profile-placeholder.png')
+    image = CloudinaryField(folder="user_profiles", null=True, blank=True, default='default_profile_image.jpg')
+
 
     def __str__(self):
         return self.user.username

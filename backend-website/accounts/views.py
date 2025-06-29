@@ -94,9 +94,9 @@ def display(request):
     elif sort == 'price_high':
         plants = plants.order_by('-price')
 
-    print("Filters applied:")
-    print(f"Query: {query}, Category: {category}, Min: {min_price}, Max: {max_price}")
-    print("Results:", plants)
+    # print("Filters applied:")
+    # print(f"Query: {query}, Category: {category}, Min: {min_price}, Max: {max_price}")
+    # print("Results:", plants)
 
     return render(request, 'home/display.html', {
         'plants': plants,

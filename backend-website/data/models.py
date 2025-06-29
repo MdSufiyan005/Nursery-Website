@@ -9,6 +9,7 @@ from .constants import PaymentStatus
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 plant_choices = [
     ('Indoor', 'Indoor'),
@@ -25,7 +26,8 @@ plant_choices = [
 class Plant(models.Model):
     name = models.CharField(max_length=100)
     Desciption = models.TextField()
-    image = models.ImageField(upload_to='plants/', null=True, blank=True)
+    # image = models.ImageField(upload_to='plants/', null=True, blank=True)
+    image = CloudinaryField(folder="plants", null=True, blank=True)
     Quantity = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)

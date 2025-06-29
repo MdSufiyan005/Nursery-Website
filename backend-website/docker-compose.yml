@@ -1,0 +1,15 @@
+name: docker-project
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: docker-test-nursery-web
+    container_name: docker-test-nursery-web
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env

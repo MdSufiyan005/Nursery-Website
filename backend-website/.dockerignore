@@ -1,0 +1,4 @@
+.env
+myven/
+dockerfile
+docker-compose.yml

@@ -13,11 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from urllib.parse import urlparse
 import os
-from dotenv import load_dotenv
 from urllib.parse import urlparse
 from decouple import config
+import cloudinary
 
-load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -58,6 +57,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     "widget_tweaks",
+    'cloudinary',
+    'cloudinary_storage',
     "slippers",
     'import_export',
     'data',
@@ -215,6 +216,20 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+CLOUDINARY_CLOUD_NAME = config('CLOUDINARY_CLOUD_NAME')
+CLOUDINARY_API_KEY = config('CLOUDINARY_API_KEY')
+CLOUDINARY_API_SECRET = config('CLOUDINARY_API_SECRET')
+
+# Configuration       
+cloudinary.config( 
+    cloud_name = CLOUDINARY_CLOUD_NAME, 
+    api_key = CLOUDINARY_API_KEY, 
+    api_secret = CLOUDINARY_API_SECRET,
+    secure=True
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 STATIC_URL = '/static/'
 

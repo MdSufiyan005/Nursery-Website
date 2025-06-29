@@ -1,26 +1,23 @@
 # 🌱 Nursery Website - Backend (IN DEVELOPMENT)
 
-This repository contains the backend of the **Nursery Website**, developed using Django. The project is currently in active development. It handles all server-side logic including routing, database management, and administrative operations.
+This repository contains the **Nursery Website**, built using Django. The project is currently under active development. It handles all server-side logic including routing, database models, authentication, and administrative operations.
 
 ---
 
 ## 🚀 Getting Started
 
 Follow the steps below to set up the project locally on your system.
-also for the AUTH part you need to use .exp.env -> .env file and add the environment variables to it
-follow this YT Video for getting google credentials ``` https://www.youtube.com/watch?v=LyDdfO6o_G4  ```
+
+> ⚠️ For the authentication system (Google OAuth), copy the variables from `.exp.env` to a new `.env` file and configure your credentials.
+> Follow this YouTube tutorial to get Google credentials:
+> 🎥 [`https://www.youtube.com/watch?v=LyDdfO6o_G4`](https://www.youtube.com/watch?v=LyDdfO6o_G4)
+
+---
 
 ### 1. Clone the Repository
 
-Fork or clone the repository from GitHub:
-
 ```bash
 git clone https://github.com/MdSufiyan005/Nursery-Website.git
-````
-
-Navigate into the project directory:
-
-```bash
 cd Nursery-Website
 ```
 
@@ -44,9 +41,9 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+---
 
-Install all required Python packages:
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -59,10 +56,10 @@ pip install -r requirements.txt
 Navigate to the backend directory:
 
 ```bash
-cd backend
+cd backend-website
 ```
 
-Run Django commands:
+Apply migrations and run the development server:
 
 ```bash
 python manage.py makemigrations
@@ -70,7 +67,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Visit the server in your browser:
+Access the app at:
 
 ```
 http://127.0.0.1:8000/
@@ -78,9 +75,22 @@ http://127.0.0.1:8000/
 
 ---
 
-## 🗂️ Accessing the Admin Panel
+## 🐳 Running the Docker Container
 
-To manage database content via Django Admin:
+1. Ensure Docker Desktop is installed and running.
+2. Copy `.exp.env` → `.env` and update the environment variables.
+3. Build and run the container:
+
+```bash
+cd backend-website
+docker compose up -d --build
+```
+
+Open Docker Desktop to verify the container is running on port `8000`.
+
+---
+
+## 🗂️ Accessing the Admin Panel
 
 1. Create a superuser:
 
@@ -88,9 +98,9 @@ To manage database content via Django Admin:
 python manage.py createsuperuser
 ```
 
-> ⚠️ Remember the username and password you set.
+> ⚠️ Remember the username and password.
 
-2. Access the admin interface:
+2. Open your browser and go to:
 
 ```
 http://127.0.0.1:8000/admin
@@ -100,12 +110,12 @@ http://127.0.0.1:8000/admin
 
 ## 📌 Notes
 
-* Activate your virtual environment before running commands.
-* Run migrations after modifying models.
+* Always activate the virtual environment before using Django commands.
+* Apply migrations after making changes to models.
+* All environment variables like `SECRET_KEY`, `DATABASE_URL`, `CLOUDINARY_API_KEY`, etc., must be in your `.env` file.
 
 ---
 
 ## 🤝 Contributing
 
-fork the project, work on features or bugs, and create a pull request.
-
+Feel free to fork the project, work on features or bugs, and submit a pull request 🚀.
