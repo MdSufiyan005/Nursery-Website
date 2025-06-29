@@ -1,7 +1,9 @@
-{% extends "main.html" %} {% load static%} {% block style %}<link
-  rel="stylesheet"
-  href="{% static 'css/specific_plant.css'%}"
-/>{% endblock style %} {% block content %}
+{% extends "main.html" %} {% load static%} 
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/specific_plant.css'%}"/>
+<link rel="stylesheet" href="{% static 'css/display.css'%}"/>
+{% endblock style %} 
+{% block content %}
 <input
   type="hidden"
   id="cart-data"
@@ -55,26 +57,65 @@
 
   <div class="similar-plants">
     <h3>🌱 Similar Plants</h3>
-    <div class="similar-grid">
-      {% for similar in similar_plants %}
-      <div class="similar-card">
+    {% if similar_plants %}
+    <div class="card-grid">
+      {% for plant in similar_plants %}
+      <div class="card">
+        <div class="card-badges">
+          {% if plant.Quantity < 5 %}
+          <span class="badge low-stock">Low Stock</span>
+          {% endif %}
+          {% if plant.is_new %}
+          <span class="badge new">New</span>
+          {% endif %}
+        </div>
         <div class="image-container">
           <img
-            src="{{ similar.image.url }}"
-            alt="{{ similar.name }}"
-            class="home-image"
+            src="{{ plant.image.url }}"
+            alt="{{ plant.name }}"
+            class="plant-image"
           />
+          <div class="image-overlay">
+            <a href="{% url 'SpecificPlant' plant.id %}" class="quick-view">Quick View</a>
+          </div>
         </div>
-        <div class="text-container">
-          <h4>{{ similar.name }}</h4>
-          <p>{{ similar.Category }} | ₹{{ similar.price }}</p>
+        <div class="card-content">
+          <div class="content-header">
+            <h2 class="plant-name">{{ plant.name }}</h2>
+            <span class="plant-category">{{ plant.Category }}</span>
+          </div>
+
+                <div class="plant-info">
+                    <div class="price-section">
+                        <span class="price">₹{{ plant.price }}</span>
+                        {% if plant.original_price %}
+                            <span class="original-price">₹{{ plant.original_price }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="stock-info {% if plant.Quantity < 5 %}low{% endif %}">
+                        <i class="stock-icon"></i>
+                        <span>{{ plant.Quantity }} in stock</span>
+                    </div>
+                </div>
+            {% comment %} <div class="actions">
+              <a
+                href="{% url 'add_to_cart' plant.id %}"
+                class="add-to-cart js-add-cart"
+                data-plant-id="{{ plant.id }}"
+                data-auth="{{ user.is_authenticated|lower }}"
+                data-login-url="{% url 'account_login' %}"
+              >
+              </a>
+            </div> {% endcomment %}
+          </div>
         </div>
-        <a href="{% url 'SpecificPlant' similar.id %}" class="purchase-button">
-          Look at it
-        </a>
       </div>
       {% endfor %}
     </div>
+    {% else %}
+    <p>No similar plants found.</p>
+    {% endif %}
   </div>
 </div>
 

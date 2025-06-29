@@ -109,43 +109,6 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.fullname or 'No Name'} - {self.email or 'No Email'}"
 
-<<<<<<< HEAD
-# class UserShippingDetails(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=254)
-#     email = models.EmailField()
-#     phone_number = models.CharField(max_length=15)
-#     address = models.TextField()
-#     city = models.CharField(max_length=100)
-#     state = models.CharField(max_length=100)
-#     pincode = models.CharField(max_length=6)
-    
-#     def __str__(self):
-#         return f"Shipping details for {self.user.username}"
-
-# Create your models here.
-def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    username = slugify(instance.user.username)
-    return f'user_{username}/{filename}'
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    image = models.ImageField(upload_to=user_directory_path, default='img/profile-placeholder.png')
-
-    def __str__(self):
-        return self.user.username
-
-# Create your models here.
-class ProfileDetail(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profiledetail', null=True, blank=True)
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)  # restored unique=True
-    contact = models.CharField(max_length=10)
-    address = models.TextField()
-    pincode = models.CharField(max_length=6, default="000000")
-
-=======
 class UserShippingDetails(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
@@ -156,6 +119,5 @@ class UserShippingDetails(models.Model):
     state = models.CharField(max_length=100)
     pincode = models.CharField(max_length=6)
     
->>>>>>> f626f9c05c44a1aab21c7d53f62dbc918e24dce0
     def __str__(self):
         return f"Shipping details for {self.user.username}"

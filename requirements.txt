@@ -1,10 +1,8 @@
 Django >=5.2
-dotenv
-psycopg 
 Pillow
 django-allauth[socialaccount]
 django-allauth-ui
-# django-widgets-tweaks
+django-widgets-tweaks
 dj-database-url
 python-decouple
 django-unfold
@@ -13,16 +11,8 @@ razorpay
 gunicorn
 whitenoise
 psycopg[binary,pool]
-vercel-python 
-vercel-python-wsgi
-unfold
 setuptools
-django
-dotenv
-python-decouple
-django-allauth_ui
 django-allauth
 django-import_export
 requests
 jwt
-razorpay

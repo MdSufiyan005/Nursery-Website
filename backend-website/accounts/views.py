@@ -261,7 +261,7 @@ def update_cart_quantity(request, plant_id):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 @login_required
 def cart_view(request):
-    print("[CART_VIEW DEBUG] Called for user:", request.user.username)
+    # print("[CART_VIEW DEBUG] Called for user:", request.user.username)
     cart = request.session.get('cart', {})
     items = []
     total = 0
@@ -303,8 +303,8 @@ def cart_view(request):
         'city': get_autofill(profile.city,''),
         'state':get_autofill(profile.state,''),
     }
-    print(f"[CART_VIEW DEBUG] Autofill context: {autofill}")
-    print(f"[CART_VIEW DEBUG] Passing context to template: cart_items={items}, total_amount={total}, autofill={autofill}")
+    # print(f"[CART_VIEW DEBUG] Autofill context: {autofill}")
+    # print(f"[CART_VIEW DEBUG] Passing context to template: cart_items={items}, total_amount={total}, autofill={autofill}")
     context = {
         'cart_items': items,
         'total_amount': total,  # Changed from order.total to total_amount
