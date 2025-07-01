@@ -361,6 +361,11 @@
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 2rem;
         justify-items: center;
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        cursor: pointer;
       }
 
       .category-card {
@@ -395,6 +400,10 @@
         font-size: 0.95rem;
         padding: 0 1rem 1rem;
         color: #444;
+      }
+
+      .swiper {
+        padding: 3rem 0;
       }
 
       /* FAQ Section Styling */
@@ -551,7 +560,7 @@
   body {
     margin: 0;
     padding: 0;
-    /* background-image: url("../img/landing_page.png"); */
+
     background-size: cover;
     background-repeat: no-repeat;
     background-position: top center;
@@ -562,7 +571,6 @@
   body {
     margin: 0;
     padding: 0;
-    /* background-image: url("../img/landing_page.png"); */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;  /* Centered horizontally, start from top */
@@ -579,7 +587,6 @@
     left: 0;
     width: 100%;
     height: calc(100% + 80px);
-    /* background-image: url("../img/landing_page.png"); */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;
@@ -643,5 +650,3 @@
     height: 100vh;
     pointer-events: none;
   }
-
-

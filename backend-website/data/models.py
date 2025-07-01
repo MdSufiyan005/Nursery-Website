@@ -21,7 +21,11 @@ plant_choices = [
     ('Foliage', 'Foliage'),
     ('Tree', 'Tree'),
     ('Shrub', 'Shrub'),
-    ('Vine', 'Vine')
+    ('Vine', 'Vine'),
+    ('Pots', 'Pots'),
+    ('Seeds', 'Seeds'),
+    ('Ornamental', 'Ornamental'),
+    ('Medicinal', 'Medicinal'),
 ]
 class Plant(models.Model):
     name = models.CharField(max_length=100)

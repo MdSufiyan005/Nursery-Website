@@ -66,38 +66,84 @@
           });
         });
 
+        function redirectToCategory(categoryName) {
+          const encoded = encodeURIComponent(categoryName);
+          const url = `http://127.0.0.1:8000/display/?category=${encoded}&sort=&min_price=&max_price=`;
+          window.location.href = url;
+        }
+
+        // ✅ Make it globally accessible
+        window.redirectToCategory = redirectToCategory;
+
         // Populate category cards
         const categories = [
-          {
-            name: "Indoor Plants",
-            img: "https://images.pexels.com/photos/793012/pexels-photo-793012.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            desc: "Perfect for bedrooms, kitchens and desks.",
-          },
-          {
-            name: "Flowering Plants",
-            img: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
-            desc: "Bring vibrant colors to your garden!",
-          },
-          {
-            name: "Herbs & Medicinal",
-            img: "https://images.unsplash.com/photo-1560180474-e8563fd75bab",
-            desc: "Grow basil, mint, tulsi & more.",
-          },
-          {
-            name: "Succulents & Cactus",
-            img: "https://images.pexels.com/photos/7354858/pexels-photo-7354858.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            desc: "Low maintenance, high charm.",
-          },
-        ];
+        {
+          name: "Indoor Plants",
+          category: "Indoor",
+          img: "https://images.pexels.com/photos/793012/pexels-photo-793012.jpeg",
+          desc: "Perfect for bedrooms, kitchens and desks.",
+        },
+        {
+          name: "Flowering Plants",
+          category: "Flowering",
+          img: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
+          desc: "Bring vibrant colors to your garden!",
+        },
+        {
+          name: "Herbs & Medicinal",
+          category: "Herbs",
+          img: "https://images.unsplash.com/photo-1560180474-e8563fd75bab",
+          desc: "Grow basil, mint, tulsi & more.",
+        },
+        {
+          name: "Succulents & Cactus",
+          category: "Succulents",
+          img: "https://images.pexels.com/photos/7354858/pexels-photo-7354858.jpeg",
+          desc: "Low maintenance, high charm.",
+        },
+        {
+          name: "Pots and Decor",
+          category: "Pots",
+          img: "https://images.unsplash.com/photo-1653914077955-019211b3dddc",
+          desc: "Perfect Pots for your Lovely plants.",
+        },
+      ];
 
-        const container = document.getElementById("categoryContainer");
-        categories.forEach((cat) => {
-          container.innerHTML += `
-            <div class="category-card">
-              <img src="${cat.img}" alt="${cat.name}" onerror="this.style.display='none';">
-              <h3>${cat.name}</h3>
-              <p>${cat.desc}</p>
-            </div>
-          `;
+          const container = document.getElementById("categoryContainer");
+
+          categories.forEach(cat => {
+            container.innerHTML += `
+              <div class="swiper-slide">
+                <div class="category-card" onclick="redirectToCategory('${cat.category}')">
+                  <img src="${cat.img}" alt="${cat.name}" />
+                  <h3>${cat.name}</h3>
+                  <p>${cat.desc}</p>
+                </div>
+              </div>
+            `;
+          });
+
+          const swiper = new Swiper('.category-swiper', {
+            slidesPerView: 1.2,
+            spaceBetween: 20,
+            loop: true,
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true
+            },
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev'
+            },
+            breakpoints: {
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 3 },
+              1024: { slidesPerView: 4 }
+            },
+            autoplay: {
+              delay: 3000, 
+              disableOnInteraction: false
+            }
+          });
+
         });
-      });

@@ -9,11 +9,15 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
     />
+    <!-- Slider -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     {% block style %}
     <link rel="stylesheet" href="{% static 'css/home_page.css'%}" />
     {% endblock style %}
   </head>
   <body>
+
     {% block content %} {% comment %} @import
     url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     {% endcomment %}
@@ -52,7 +56,19 @@
 
     <section class="categories">
       <h2>Popular Categories</h2>
-      <div class="category-cards" id="categoryContainer"></div>
+
+      <div class="swiper category-swiper">
+        <div class="swiper-wrapper" id="categoryContainer">
+          <!-- Cards will be injected here -->
+        </div>
+
+        <!-- Arrows -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- Dots -->
+        <div class="swiper-pagination"></div>
+      </div>
     </section>
 
     <!-- FAQ Section -->
@@ -114,8 +130,13 @@
         </address>
       </div>
     </section>
+
+    <!-- Slider JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     {% endblock content %} {% block script %}
     <script src="{% static 'js/home_page.js' %}"></script>
     {% endblock script %}
+
   </body>
 </html>

@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: docker-test-nursery-web
-    container_name: docker-test-nursery-web
+    image: nursery-web
+    container_name: nursery-web-container
     ports:
       - "8000:8000"
     volumes:
