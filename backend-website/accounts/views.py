@@ -97,11 +97,18 @@ def display(request):
     # print("Filters applied:")
     # print(f"Query: {query}, Category: {category}, Min: {min_price}, Max: {max_price}")
     # print("Results:", plants)
-
+    categories = (
+        Plant.objects
+        .exclude(Category__isnull=True)
+        .exclude(Category__exact='')
+        .values_list('Category', flat=True)
+        .distinct()
+    )
     return render(request, 'home/display.html', {
         'plants': plants,
         'plant_names': plant_names,
         'query': query,
+        'categories': categories,
         'selected_category': category,
         'min_price': min_price,
         'max_price': max_price,

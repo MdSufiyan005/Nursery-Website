@@ -1,6 +1,6 @@
 from django import forms
 from .models import ContactMessage
-from .models import UserShippingDetails
+# from .models import UserShippingDetails
 
 
 class ContactMessageForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class ContactMessageForm(forms.ModelForm):
         fields = ('fullname', 'email', 'message')
 
 
-class ShippingDetailsForm(forms.ModelForm):
-    class Meta:
-        model = UserShippingDetails
-        exclude = ['user']
+# class ShippingDetailsForm(forms.ModelForm):
+#     class Meta:
+#         model = UserShippingDetails
+#         exclude = ['user']

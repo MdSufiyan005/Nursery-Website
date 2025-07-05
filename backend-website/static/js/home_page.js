@@ -68,7 +68,8 @@
 
         function redirectToCategory(categoryName) {
           const encoded = encodeURIComponent(categoryName);
-          const url = `http://127.0.0.1:8000/display/?category=${encoded}&sort=&min_price=&max_price=`;
+          const baseUrl = window.location.origin; // auto-detects current domain
+          const url = `${baseUrl}/display/?category=${encoded}&sort=&min_price=&max_price=`;
           window.location.href = url;
         }
 

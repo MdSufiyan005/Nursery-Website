@@ -42,14 +42,14 @@ class Plant(models.Model):
     def __str__(self):
         return self.name
     
-class User_details(AbstractBaseUser):
-    user_name = models.CharField(max_length=100, unique=True)
-    Phone_number = models.IntegerField()
-    email = models.EmailField(unique=True)
-    address = models.TextField()
+# class User_details(AbstractBaseUser):
+#     user_name = models.CharField(max_length=100, unique=True)
+#     Phone_number = models.IntegerField()
+#     email = models.EmailField(unique=True)
+#     address = models.TextField()
 
-    def __str__(self):
-        return self.user_name
+#     def __str__(self):
+#         return self.user_name
     
 
 
@@ -115,15 +115,15 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.fullname or 'No Name'} - {self.email or 'No Email'}"
 
-class UserShippingDetails(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=254)
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=15)
-    address = models.TextField()
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    pincode = models.CharField(max_length=6)
+# class UserShippingDetails(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=254)
+#     email = models.EmailField()
+#     phone_number = models.CharField(max_length=15)
+#     address = models.TextField()
+#     city = models.CharField(max_length=100)
+#     state = models.CharField(max_length=100)
+#     pincode = models.CharField(max_length=6)
     
-    def __str__(self):
-        return f"Shipping details for {self.user.username}"
+#     def __str__(self):
+#         return f"Shipping details for {self.user.username}"

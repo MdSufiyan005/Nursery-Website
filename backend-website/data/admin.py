@@ -10,17 +10,13 @@ from unfold.forms import (AdminPasswordChangeForm, UserChangeForm,
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import RangeDateFilter
 
-from .models import Plant, User_details,Order, OrderItem,ContactMessage,UserShippingDetails
+from .models import Plant,Order, OrderItem,ContactMessage
 
 from django.core.mail import send_mail
 
-admin.site.register(UserShippingDetails)
 
-# admin.site.register(Plant)
-# admin.site.register(User_details)
-# Register your models here.
 admin.site.unregister(User) # Unregister the default User model to customize it
-# admin.site.register(Order) # Register the Order model
+
 @register(User)
 class UserAdmin(BaseUserAdmin,ModelAdmin):
     form = UserChangeForm
@@ -52,10 +48,10 @@ class PlantAdmin(ModelAdmin,ImportExportModelAdmin):
     list_filter = ['Category',
                    ("created_at", RangeDateFilter)]
 
-@admin.register(User_details)
-class UserAdmin(ModelAdmin):
-    list_display = ('user_name', 'email', 'Phone_number')
-    search_fields = ('user_name', 'email')
+# @admin.register(User_details)
+# class UserAdmin(ModelAdmin):
+#     list_display = ('user_name', 'email', 'Phone_number')
+#     search_fields = ('user_name', 'email')
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem

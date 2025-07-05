@@ -23,9 +23,12 @@
                 <div class="custom-dropdown-wrapper">
                     <select name="category" id="categorySelect" class="filter-select">
                         <option value="">All Categories</option>
-                        <option value="Indoor" {% if selected_category == 'Indoor' %}selected{% endif %}>Indoor</option>
-                        <option value="Outdoor" {% if selected_category == 'Outdoor' %}selected{% endif %}>Outdoor</option>
-                        <option value="Tree" {% if selected_category == 'Tree' %}selected{% endif %}>Tree</option>
+            <!-- can Add new category here -->
+                        {% for cat in categories %}
+                        {% if cat %}
+                        <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endif %}
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="custom-dropdown-wrapper">

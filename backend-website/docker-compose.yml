@@ -1,4 +1,4 @@
-name: docker-project
+name: nursery-webapp
 
 services:
   app:
@@ -11,5 +11,3 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-    env_file:
-      - .env
