@@ -163,6 +163,7 @@
             if (response.ok) {
               updateButtonToAdded(btn);
               updateCartCount(data.cart_count);
+              window.location.reload();
             }
           }
         } catch (err) {

@@ -6,7 +6,11 @@
 {% endblock style %} {% block content %}
 <nav class="navbar">
   <a href="{% url 'home' %}" class="nav-brand"> 🌿 Nursery </a>
-  <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰
+      {% if request.session.cart and request.session.cart|length > 0 %}
+        <span id="cart-count" style="top: 14px;right: 10px;" script = "">{{ request.session.cart|length }}</span>
+      {% endif %}
+    </button>
   <ul class="nav-links" id="mainNavLinks">
     <li><a href="{% url 'home' %}">Home</a></li>
     <li><a href="{% url 'display' %}">Shop</a></li>
